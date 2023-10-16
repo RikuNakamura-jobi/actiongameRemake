@@ -62,7 +62,7 @@ CNumber *CNumber::Create(void)
 //=====================================
 HRESULT CNumber::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
 	if (FAILED(D3DXCreateTextureFromFile(pDevice,

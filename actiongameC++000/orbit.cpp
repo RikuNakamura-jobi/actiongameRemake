@@ -95,7 +95,7 @@ COrbit *COrbit::Create(D3DXMATRIX mtxWorld, D3DXVECTOR3 posOffset1, D3DXVECTOR3 
 //=====================================
 HRESULT COrbit::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
 	if (FAILED(D3DXCreateTextureFromFile(pDevice,
@@ -122,7 +122,7 @@ void COrbit::Unload(void)
 //=====================================
 HRESULT COrbit::Init(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer
@@ -248,7 +248,7 @@ void COrbit::UpdatePolygon(void)
 //=====================================
 void COrbit::Draw(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;						//計算用マトリックス
 
@@ -312,7 +312,7 @@ void COrbit::Draw(void)
 void COrbit::SetPositionOffset(D3DXMATRIX mtxWorld)
 {
 	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//計算用マトリックス
 	D3DXMATRIX mtxOffset, mtxTrans;

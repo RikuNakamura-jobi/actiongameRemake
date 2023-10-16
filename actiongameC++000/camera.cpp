@@ -65,9 +65,9 @@ void CCamera::Uninit(void)
 //=============================================================================
 void CCamera::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
-	CInput *inputPad = CManager::GetInputPad();
-	CInput *inputMouse = CManager::GetInputMouse();
+	CInput *input = CManager::Get()->Get()->GetInputKeyboard();
+	CInput *inputPad = CManager::Get()->Get()->GetInputPad();
+	CInput *inputMouse = CManager::Get()->Get()->GetInputMouse();
 
 	float RotStick = 0.0f;
 	float lengthStick = 0.0f;
@@ -78,7 +78,7 @@ void CCamera::Update(void)
 		lengthStick = hypotf((float)inputPad->GetRStickLRPress(), (float)inputPad->GetRStickUDPress());
 	}
 	
-	CManager::GetDebugProc()->Print("Rスティックの距離: %f\n", lengthStick);
+	CManager::Get()->Get()->GetDebugProc()->Print("Rスティックの距離: %f\n", lengthStick);
 
 	m_rotOld = m_rot;
 
@@ -125,7 +125,7 @@ void CCamera::Update(void)
 void CCamera::Set(void)
 {
 	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->Get()->GetRenderer()->GetDevice();
 
 	//プロジェクションマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxProjection);
@@ -184,9 +184,9 @@ void CCamera::Rot(void)
 
 	fLengthCamera = 1000.0f;
 
-	m_posRDest.x = CManager::GetScene()->GetPlayer()->GetPos().x - (sinf(0.0f) * 0.0f);
-	m_posRDest.y = CManager::GetScene()->GetPlayer()->GetPos().y + 30.0f;
-	m_posRDest.z = CManager::GetScene()->GetPlayer()->GetPos().z - (cosf(0.0f) * 0.0f);
+	m_posRDest.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetPos().x - (sinf(0.0f) * 0.0f);
+	m_posRDest.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetPos().y + 30.0f;
+	m_posRDest.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetPos().z - (cosf(0.0f) * 0.0f);
 
 	m_posVDest.x = m_posRDest.x - (sinf(m_rot.z) * sinf(m_rot.y)) * fLengthCamera;
 	m_posVDest.y = m_posRDest.y + 0.0f - (cosf(m_rot.z) * fLengthCamera);

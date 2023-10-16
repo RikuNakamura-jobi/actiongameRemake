@@ -124,7 +124,7 @@ CFade *CFade::Create(TYPE type, CScene::MODE mode)
 //=====================================
 HRESULT CFade::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	for (int nCntFade = 0; nCntFade < TYPE_MAX; nCntFade++)
 	{
@@ -295,7 +295,7 @@ void CFade::Update(void)
 				{
 					if (m_timer == 10)
 					{
-						CManager::GetScene()->SetbFade(true);
+						CManager::Get()->GetScene()->SetbFade(true);
 					}
 
 					texPos[0].x = 0.0f;
@@ -325,7 +325,7 @@ void CFade::Update(void)
 				{
 					if (m_timer == 10)
 					{
-						CManager::GetScene()->SetbFade(true);
+						CManager::Get()->GetScene()->SetbFade(true);
 					}
 
 					pos.x = 640.0f;
@@ -381,7 +381,7 @@ void CFade::Update(void)
 				{
 					if (m_timer == 10)
 					{
-						CManager::GetScene()->SetbFade(true);
+						CManager::Get()->GetScene()->SetbFade(true);
 					}
 
 					pos.x = 960.0f;
@@ -406,7 +406,7 @@ void CFade::Update(void)
 				if (color.a > 1.0f)
 				{
 					color.a = 1.0f;
-					CManager::GetScene()->SetbFade(true);
+					CManager::Get()->GetScene()->SetbFade(true);
 					m_state = STATE_IN;
 				}
 

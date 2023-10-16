@@ -161,7 +161,7 @@ void CRenderer::Draw(void)
 	 //各種オブジェクトの描画処理
 		CObject::DrawAll();
 
-		CManager::GetDebugProc()->Draw();
+		CManager::Get()->GetDebugProc()->Draw();
 
 		//描画終了
 		m_pD3DDevice->EndScene();

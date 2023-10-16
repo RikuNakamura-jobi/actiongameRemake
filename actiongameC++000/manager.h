@@ -39,27 +39,30 @@ public:				//外部からアクセス可能
 	void Update(void);
 	void Draw(void);
 
-	//静的メンバ関数
-	static CRenderer *GetRenderer(void) { return m_pRenderer; }
+	CRenderer *GetRenderer(void) { return m_pRenderer; }
 
-	static CInput *GetInputKeyboard(void) { return m_pInputKeyboard; }
+	CInput *GetInputKeyboard(void) { return m_pInputKeyboard; }
 
-	static CInput *GetInputPad(void) { return m_pInputPad; }
+	CInput *GetInputPad(void) { return m_pInputPad; }
 
-	static CInput *GetInputMouse(void) { return m_pInputMouse; }
+	CInput *GetInputMouse(void) { return m_pInputMouse; }
 
-	static CLight *GetLight(void) { return m_pLight; }
+	CLight *GetLight(void) { return m_pLight; }
 
-	static CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
+	CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
 
-	static CTexture *GetTexture(void) { return m_pTexture; }
+	CTexture *GetTexture(void) { return m_pTexture; }
 
-	static void SetMode(CScene::MODE mode);
-	static CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
+	void SetMode(CScene::MODE mode);
+	CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
 
-	static CScene *GetScene(void) { return m_pScene; }
+	CScene *GetScene(void) { return m_pScene; }
 
 	void SetFPS(int nCountFPS) { m_nCountFPS = nCountFPS; }
+
+	//静的メンバ関数
+	static CManager *Get(void);
+	static HRESULT Release(void);
 
 protected:			//子ならアクセス可能(使わない)
 
@@ -68,19 +71,20 @@ private:			//外部からアクセス不可能
 	//メンバ関数
 
 	//メンバ変数
+	CRenderer *m_pRenderer;
+	CInput *m_pInputKeyboard;
+	CInput *m_pInputPad;
+	CInput *m_pInputMouse;
+	CSound *m_pSound;
+	CLight *m_pLight;
+	CDebugProc *m_pDebugProc;
+	CTexture *m_pTexture;
+	CScene *m_pScene;
+	CEnemyManager *m_pEnemyManager;
 	int m_nCountFPS;
 
 	//静的メンバ変数
-	static CRenderer *m_pRenderer;
-	static CInput *m_pInputKeyboard;
-	static CInput *m_pInputPad;
-	static CInput *m_pInputMouse;
-	static CSound *m_pSound;
-	static CLight *m_pLight;
-	static CDebugProc *m_pDebugProc;
-	static CTexture *m_pTexture;
-	static CScene *m_pScene;
-	static CEnemyManager *m_pEnemyManager;
+	static CManager *pManager;
 
 };
 

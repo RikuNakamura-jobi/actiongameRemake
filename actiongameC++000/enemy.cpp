@@ -76,7 +76,7 @@ CEnemy *CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHe
 //=====================================
 HRESULT CEnemy::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	D3DXMATERIAL *pMat;
 
@@ -204,8 +204,8 @@ HRESULT CEnemy::Init(void)
 //=====================================
 void CEnemy::Uninit(void)
 {
-	CManager::GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->addNumEnemy(-1);
-	CManager::GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->SetEnemy(m_nIdxSpawn, NULL);
+	CManager::Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->addNumEnemy(-1);
+	CManager::Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->SetEnemy(m_nIdxSpawn, NULL);
 
 	if (m_lockon != NULL)
 	{
@@ -221,7 +221,7 @@ void CEnemy::Uninit(void)
 //=====================================
 void CEnemy::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
+	CInput *input = CManager::Get()->GetInputKeyboard();
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 	D3DXVECTOR3 move = GetMove();
@@ -284,7 +284,7 @@ void CEnemy::Update(void)
 	SetHeight(fHeight);
 	SetWidth(fWidth);
 
-	//CManager::GetDebugProc()->Print("エネミーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
+	//CManager::Get()->GetDebugProc()->Print("エネミーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 
 	CObjectX::Update();
 }

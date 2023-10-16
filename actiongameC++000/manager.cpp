@@ -41,15 +41,7 @@
 //プロトタイプ宣言---------------------
 
 //静的メンバ変数宣言-------------------
-CRenderer *CManager::m_pRenderer = NULL;
-CInput *CManager::m_pInputKeyboard = NULL;
-CInput *CManager::m_pInputPad = NULL;
-CInput *CManager::m_pInputMouse = NULL;
-CSound *CManager::m_pSound = NULL;
-CLight *CManager::m_pLight = NULL;
-CDebugProc *CManager::m_pDebugProc = NULL;
-CTexture *CManager::m_pTexture = NULL;
-CScene *CManager::m_pScene = NULL;
+CManager *CManager::pManager = NULL;
 
 //=====================================
 // コンストラクタ・デストラクタ
@@ -475,6 +467,22 @@ void CManager::Draw(void)
 }
 
 //=====================================
+// マネージャーの破棄
+//=====================================
+HRESULT CManager::Release(void)
+{
+	if (pManager != NULL)
+	{
+		pManager->Uninit();
+
+		delete pManager;
+		pManager = NULL;
+	}
+
+	return S_OK;
+}
+
+//=====================================
 // モードの設定
 //=====================================
 void CManager::SetMode(CScene::MODE mode)
@@ -493,4 +501,19 @@ void CManager::SetMode(CScene::MODE mode)
 
 	m_pScene->Init();
 	m_pScene->SetMode(mode);
+}
+
+//=====================================
+// マネージャーの取得
+//=====================================
+CManager *CManager::Get(void)
+{
+	if (pManager == NULL)
+	{
+		return pManager = new CManager;
+	}
+	else
+	{
+		return pManager;
+	}
 }

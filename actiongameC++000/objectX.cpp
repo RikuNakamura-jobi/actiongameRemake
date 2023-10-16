@@ -67,7 +67,7 @@ CObjectX *CObjectX::Create(void)
 //=====================================
 HRESULT CObjectX::Init(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	return S_OK;
 }
@@ -93,7 +93,7 @@ void CObjectX::Update(void)
 //=====================================
 void CObjectX::Draw(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 	D3DXMATRIX mtxRot, mtxTrans;		//計算用マトリックス
 	D3DMATERIAL9 matDef;
 	D3DXMATERIAL *pMat;

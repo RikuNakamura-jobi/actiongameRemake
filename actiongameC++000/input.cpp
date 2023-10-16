@@ -229,7 +229,7 @@ BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE *pdidInstance, VOID *
 {
 	HRESULT hr;
 	LPDIRECTINPUT8 pInput = CInput::GetInput();						//DirectInputオブジェクトへのポインタ
-	LPDIRECTINPUTDEVICE8 pDevice = CManager::GetInputPad()->CInput::GetInputDevice();			//入力デバイスへのポインタ
+	LPDIRECTINPUTDEVICE8 pDevice = CManager::Get()->GetInputPad()->CInput::GetInputDevice();			//入力デバイスへのポインタ
 
 	hr = pInput->CreateDevice(pdidInstance->guidInstance, &pDevice, NULL);
 
@@ -242,7 +242,7 @@ BOOL CALLBACK EnumAxesCallback(const DIDEVICEOBJECTINSTANCE *pdidoi, VOID *pCont
 {
 	HRESULT     hr;
 	DIPROPRANGE diprg;
-	LPDIRECTINPUTDEVICE8 pDevice = CManager::GetInputPad()->CInput::GetInputDevice();			//入力デバイスへのポインタ
+	LPDIRECTINPUTDEVICE8 pDevice = CManager::Get()->GetInputPad()->CInput::GetInputDevice();			//入力デバイスへのポインタ
 
 	diprg.diph.dwSize = sizeof(DIPROPRANGE);
 	diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
@@ -350,28 +350,28 @@ void CInputPad::Update(void)
 	}
 
 	int nCheck = 1;
-	CManager::GetDebugProc()->Print("Pad: %d\n", nCheck);
+	CManager::Get()->GetDebugProc()->Print("Pad: %d\n", nCheck);
 
 	nCheck = m_PadState.lX;
-	CManager::GetDebugProc()->Print("左スティック横: %d\n", nCheck);
+	CManager::Get()->GetDebugProc()->Print("左スティック横: %d\n", nCheck);
 
 	nCheck = m_PadState.lY;
-	CManager::GetDebugProc()->Print("左スティック縦: %d\n", nCheck);
+	CManager::Get()->GetDebugProc()->Print("左スティック縦: %d\n", nCheck);
 
 	nCheck = m_PadState.lZ;
-	CManager::GetDebugProc()->Print("右スティック横: %d\n", nCheck);
+	CManager::Get()->GetDebugProc()->Print("右スティック横: %d\n", nCheck);
 
 	nCheck = m_PadState.lRz;
-	CManager::GetDebugProc()->Print("右スティック縦: %d\n", nCheck);
+	CManager::Get()->GetDebugProc()->Print("右スティック縦: %d\n", nCheck);
 
 	for (int nCnt = 0; nCnt < 12; nCnt++)
 	{
 		nCheck = (m_PadState.rgbButtons[nCnt] & 0x80) ? 1 : 0;
-		CManager::GetDebugProc()->Print("rgbButtons%d: %d\n", nCnt, nCheck);
+		CManager::Get()->GetDebugProc()->Print("rgbButtons%d: %d\n", nCnt, nCheck);
 	}
 
 	nCheck = m_PadState.rgdwPOV[0];
-	CManager::GetDebugProc()->Print("rgdwPOV0: %d\n", nCheck);
+	CManager::Get()->GetDebugProc()->Print("rgdwPOV0: %d\n", nCheck);
 }
 
 //=====================================

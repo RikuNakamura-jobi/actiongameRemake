@@ -73,7 +73,7 @@ CBgMulti *CBgMulti::Create(void)
 //=====================================
 HRESULT CBgMulti::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->Get()->GetRenderer()->GetDevice();
 
 	for (int nCnt = 0; nCnt < MAX_BGMULTI; nCnt++)
 	{

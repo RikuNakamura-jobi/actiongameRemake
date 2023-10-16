@@ -74,7 +74,7 @@ CObject3D *CObject3D::Create(void)
 //=====================================
 HRESULT CObject3D::Init(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4,
@@ -173,7 +173,7 @@ void CObject3D::Update(void)
 //=====================================
 void CObject3D::Draw(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans;		//計算用マトリックス
 

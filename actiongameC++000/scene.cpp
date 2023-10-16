@@ -127,8 +127,8 @@ void CTitle::Uninit(void)
 //=====================================
 void CTitle::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
-	CInput *inputPad = CManager::GetInputPad();
+	CInput *input = CManager::Get()->GetInputKeyboard();
+	CInput *inputPad = CManager::Get()->GetInputPad();
 
 	if (input->GetTrigger(DIK_RETURN) == true && CFade::GetState() == 0)
 	{
@@ -147,7 +147,7 @@ void CTitle::Update(void)
 
 	if (GetbFade() == true)
 	{
-		CManager::SetMode(CScene::MODE_TUTORIAL);
+		CManager::Get()->SetMode(CScene::MODE_TUTORIAL);
 		SetbFade(false);
 	}
 
@@ -215,9 +215,9 @@ void CTutorial::Uninit(void)
 //=====================================
 void CTutorial::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
-	CInput *inputMouse = CManager::GetInputMouse();
-	CInput *inputPad = CManager::GetInputPad();
+	CInput *input = CManager::Get()->GetInputKeyboard();
+	CInput *inputMouse = CManager::Get()->GetInputMouse();
+	CInput *inputPad = CManager::Get()->GetInputPad();
 	CBg::TEXTURE textureType = m_pBg->GetTextureType();
 
 	if (m_bFinish == true)
@@ -245,7 +245,7 @@ void CTutorial::Update(void)
 
 	if (GetbFade() == true)
 	{
-		CManager::SetMode(CScene::MODE_GAME);
+		CManager::Get()->SetMode(CScene::MODE_GAME);
 		SetbFade(false);
 	}
 }
@@ -386,7 +386,7 @@ void CGame::Update(void)
 		m_pCamera->Update();
 	}
 
-	CInput *input = CManager::GetInputKeyboard();
+	CInput *input = CManager::Get()->GetInputKeyboard();
 
 	if (m_pEnemyManager != NULL)
 	{
@@ -425,7 +425,7 @@ void CGame::Update(void)
 
 	if (GetbFade() == true)
 	{
-		CManager::SetMode(CScene::MODE_RESULT);
+		CManager::Get()->SetMode(CScene::MODE_RESULT);
 		SetbFade(false);
 	}
 }
@@ -496,8 +496,8 @@ void CResult::Uninit(void)
 //=====================================
 void CResult::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
-	CInput *inputPad = CManager::GetInputPad();
+	CInput *input = CManager::Get()->GetInputKeyboard();
+	CInput *inputPad = CManager::Get()->GetInputPad();
 
 	if ((input->GetTrigger(DIK_RETURN) == true || GetCntFade() == TIME_FADE) && CFade::GetState() == 0)
 	{
@@ -516,7 +516,7 @@ void CResult::Update(void)
 
 	if (GetbFade() == true)
 	{
-		CManager::SetMode(CScene::MODE_TITLE);
+		CManager::Get()->SetMode(CScene::MODE_TITLE);
 		SetbFade(false);
 	}
 

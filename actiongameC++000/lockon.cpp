@@ -72,7 +72,7 @@ CLockon *CLockon::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 //=====================================
 HRESULT CLockon::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
 	if (FAILED(D3DXCreateTextureFromFile(pDevice,
@@ -119,7 +119,7 @@ void CLockon::Uninit(void)
 //=====================================
 void CLockon::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
+	CInput *input = CManager::Get()->GetInputKeyboard();
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 	D3DXVECTOR3 move = GetMove();
@@ -142,7 +142,7 @@ void CLockon::Update(void)
 //=====================================
 void CLockon::Draw(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//Zテストを無効化
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
@@ -161,8 +161,8 @@ void CLockon::Draw(void)
 void CLockon::target(void)
 {
 	CObject *objTarget = NULL;
-	D3DXVECTOR3 vecCamera = CManager::GetScene()->GetCamera()->GetPosRDest() - CManager::GetScene()->GetCamera()->GetPosVDest();
-	D3DXVECTOR3 posV1 = CManager::GetScene()->GetCamera()->GetPosVDest(), posV2 = CManager::GetScene()->GetCamera()->GetPosRDest();
+	D3DXVECTOR3 vecCamera = CManager::Get()->GetScene()->GetCamera()->GetPosRDest() - CManager::Get()->GetScene()->GetCamera()->GetPosVDest();
+	D3DXVECTOR3 posV1 = CManager::Get()->GetScene()->GetCamera()->GetPosVDest(), posV2 = CManager::Get()->GetScene()->GetCamera()->GetPosRDest();
 	D3DXVECTOR3 posTarget;
 	int nTargetPriority = -1;
 	float answerOuter;				//答え
@@ -171,7 +171,7 @@ void CLockon::target(void)
 	float fTargetLength;
 	bool bCenter = false;
 
-	SetPos(CManager::GetScene()->GetCamera()->GetPosRDest());
+	SetPos(CManager::Get()->GetScene()->GetCamera()->GetPosRDest());
 	SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 	SetHeight(15.0f);
 	SetWidth(15.0f);
@@ -257,6 +257,6 @@ void CLockon::target(void)
 			SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 			m_bLock = true;
 
-			CManager::GetDebugProc()->Print("ロックオンのpos: %f, %f, %f\n", objTarget->GetPos().x, objTarget->GetPos().y, objTarget->GetPos().z);
+			CManager::Get()->GetDebugProc()->Print("ロックオンのpos: %f, %f, %f\n", objTarget->GetPos().x, objTarget->GetPos().y, objTarget->GetPos().z);
 	}
 }

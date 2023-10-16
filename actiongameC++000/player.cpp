@@ -100,8 +100,8 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, TYPE type)
 
 		if (pObjectPlayer->m_Type == TYPE_SAVEDATA)
 		{
-			pObjectPlayer->SetSave(CManager::GetScene()->GetPlayer());
-			CManager::GetScene()->GetPlayer()->SetSave(pObjectPlayer);
+			pObjectPlayer->SetSave(CManager::Get()->Get()->Get()->GetScene()->GetPlayer());
+			CManager::Get()->Get()->Get()->GetScene()->GetPlayer()->SetSave(pObjectPlayer);
 		}
 	}
 
@@ -215,8 +215,8 @@ void CPlayer::Uninit(void)
 //=====================================
 void CPlayer::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
-	CInput *inputPad = CManager::GetInputPad();
+	CInput *input = CManager::Get()->Get()->GetInputKeyboard();
+	CInput *inputPad = CManager::Get()->Get()->GetInputPad();
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 posOld = pos;
 	D3DXVECTOR3 rot = GetRot();
@@ -300,12 +300,12 @@ void CPlayer::Update(void)
 		Collision(&pos, &move);
 	}
 
-	if (CManager::GetScene()->GetField() != NULL)
+	if (CManager::Get()->Get()->GetScene()->GetField() != NULL)
 	{
-		pos.y = CManager::GetScene()->GetField()->GetColHeight(pos, posOld, &move);
+		pos.y = CManager::Get()->Get()->GetScene()->GetField()->GetColHeight(pos, posOld, &move);
 	}
 
-	CManager::GetDebugProc()->Print("プレイヤーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
+	CManager::Get()->Get()->GetDebugProc()->Print("プレイヤーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 
 	if (pos.y <= 0.0f)
 	{
@@ -323,7 +323,7 @@ void CPlayer::Update(void)
 	SetHeight(fHeight);
 	SetWidth(fWidth);
 
-	CManager::GetScene()->GetCamera()->SetPos(pos);
+	CManager::Get()->Get()->GetScene()->GetCamera()->SetPos(pos);
 
 	ControlMotion(move);
 
@@ -342,7 +342,7 @@ void CPlayer::Draw(void)
 {
 	if (m_Type != TYPE_SAVEDATA || m_bSave == true)
 	{
-		LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+		LPDIRECT3DDEVICE9 pDevice = CManager::Get()->Get()->GetRenderer()->GetDevice();
 		D3DXMATRIX mtxRot, mtxTrans;		//計算用マトリックス
 
 		//ワールドマトリックスの初期化
@@ -376,12 +376,12 @@ void CPlayer::Draw(void)
 //=====================================
 void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D3DXVECTOR3 *move, float *fHeight, float *fWidth)
 {
-	CInput *input = CManager::GetInputKeyboard();
-	CInput *inputMouse = CManager::GetInputMouse();
+	CInput *input = CManager::Get()->Get()->GetInputKeyboard();
+	CInput *inputMouse = CManager::Get()->Get()->GetInputMouse();
 
-	D3DXVECTOR3 rotCamera = CManager::GetScene()->GetCamera()->GetRot();
+	D3DXVECTOR3 rotCamera = CManager::Get()->Get()->GetScene()->GetCamera()->GetRot();
 	D3DXVECTOR3 rotCameraDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	rotCameraDest.z = atan2f(CManager::GetScene()->GetCamera()->GetPosV().z - CManager::GetScene()->GetCamera()->GetPosR().z, CManager::GetScene()->GetCamera()->GetPosV().x - CManager::GetScene()->GetCamera()->GetPosR().x);
+	rotCameraDest.z = atan2f(CManager::Get()->Get()->GetScene()->GetCamera()->GetPosV().z - CManager::Get()->Get()->GetScene()->GetCamera()->GetPosR().z, CManager::Get()->Get()->GetScene()->GetCamera()->GetPosV().x - CManager::Get()->Get()->GetScene()->GetCamera()->GetPosR().x);
 
 	//移動処理
 	if (input->GetPress(DIK_A) == true)
@@ -403,26 +403,25 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 	if (input->GetTrigger(DIK_RSHIFT) == true || inputMouse->GetTrigger(1) == true)
 	{
+		move->x = 0.0f;
+		move->y = 0.0f;
+
 		if (input->GetPress(DIK_A) == true)
 		{//Aキーが押された時
-			move->y = 0.0f;
-			move->x = 50.0f;
+			move->x = 35.0f;
 		}
 		else if (input->GetPress(DIK_D) == true)
 		{//Dキーが押された時
-			move->y = 0.0f;
-			move->x = -50.0f;
+			move->x = -35.0f;
 		}
 
 		if (input->GetPress(DIK_W) == true)
 		{//Aキーが押された時
-			move->x = 0.0f;
-			move->y = 50.0f;
+			move->y = 35.0f;
 		}
 		else if (input->GetPress(DIK_S) == true)
 		{//Dキーが押された時
-			move->x = 0.0f;
-			move->y = -50.0f;
+			move->y = -35.0f;
 		}
 
 		m_state = STATE_KICK;
@@ -447,15 +446,15 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 		if (m_nShotTimer % 15 == 0 || m_nShotTimer == 1)
 		{
-			if (CManager::GetScene()->GetEnemyManager() != NULL)
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
 			{
 				for (int nCntWave = 0; nCntWave < MAX_ENEMY_WAVE; nCntWave++)
 				{
-					if (CManager::GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
+					if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
 					{
 						for (int nCntNum = 0; nCntNum < MAX_ENEMY_SPAWN; nCntNum++)
 						{
-							CEnemy *pEnemy = CManager::GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
+							CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
 
 							if (pEnemy != NULL)
 							{
@@ -463,15 +462,17 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 								{
 									nNumLock++;
 
-									posGun.x = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
-									posGun.y = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
-									posGun.z = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
+									moveShot.y = (float)((rand() % 3) - 1) * 3;
+									moveShot.z = (float)((rand() % 3) - 1) * 2;
+
+									posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
+									posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
+									posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 
 									CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200);
 
 									CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
 								}
-
 							}
 						}
 					}
@@ -480,9 +481,9 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 			if (nNumLock == 0)
 			{
-				posGun.x = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
-				posGun.y = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
-				posGun.z = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
+				posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
+				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
+				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 
 				CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1, -1, 16.0f, 16.0f, 200);
 
@@ -501,14 +502,14 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 //=====================================
 void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D3DXVECTOR3 *move, float *fHeight, float *fWidth)
 {
-	CInput *input = CManager::GetInputPad();
+	CInput *input = CManager::Get()->Get()->GetInputPad();
 
-	D3DXVECTOR3 rotCamera = CManager::GetScene()->GetCamera()->GetRot();
+	D3DXVECTOR3 rotCamera = CManager::Get()->Get()->GetScene()->GetCamera()->GetRot();
 	D3DXVECTOR3 rotCameraDest = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	float RotStick = atan2f((float)input->GetLStickLRPress(), (float)input->GetLStickUDPress());
 	float lengthStick = hypotf((float)input->GetLStickLRPress(), (float)input->GetLStickUDPress());
-	CManager::GetDebugProc()->Print("Lスティックの距離: %f\n", lengthStick);
+	CManager::Get()->Get()->GetDebugProc()->Print("Lスティックの距離: %f\n", lengthStick);
 
 	if (lengthStick > 10.0f)
 	{
@@ -537,7 +538,7 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 
 	if (input->GetButtonPress(7) == true)
 	{//Gキーが押された時
-		D3DXVECTOR3 moveShot = CManager::GetScene()->GetCamera()->GetPosR() - CManager::GetScene()->GetCamera()->GetPosV();
+		D3DXVECTOR3 moveShot = CManager::Get()->Get()->GetScene()->GetCamera()->GetPosR() - CManager::Get()->Get()->GetScene()->GetCamera()->GetPosV();
 		D3DXVECTOR3 posGun;
 		D3DXVec3Normalize(&moveShot, &moveShot);
 		m_rotDest.z = rotCamera.y - D3DX_PI;
@@ -548,15 +549,15 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 		{
 			if (m_nShotTimer % 10 == 0)
 			{
-				posGun.x = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
-				posGun.y = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
-				posGun.z = CManager::GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
+				posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
+				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
+				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 			}
 			else if (m_nShotTimer % 10 == 5)
 			{
-				posGun.x = CManager::GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._41;
-				posGun.y = CManager::GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._42;
-				posGun.z = CManager::GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._43;
+				posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._41;
+				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._42;
+				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._43;
 			}
 
 			CBullet::Create(posGun, moveShot * 100.0f, D3DXVECTOR3(rot->x, m_rotDest.z, rot->z), -1, -1, 16.0f, 16.0f, 200);
@@ -655,15 +656,15 @@ void CPlayer::SetRot(D3DXVECTOR3 *rot)
 //=====================================
 bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 {
-	if (CManager::GetScene()->GetEnemyManager() != NULL)
+	if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
 	{
 		for (int nCntWave = 0; nCntWave < MAX_ENEMY_WAVE; nCntWave++)
 		{
-			if (CManager::GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
 			{
 				for (int nCntNum = 0; nCntNum < MAX_ENEMY_SPAWN; nCntNum++)
 				{
-					CEnemy *pEnemy = CManager::GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
+					CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
 
 					if (pEnemy != NULL)
 					{
@@ -676,7 +677,7 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 
 								D3DXVec3Normalize(&moveDash, move);
 
-								*move = D3DXVECTOR3(-moveDash.x * 15.0f, 15.0f, 0.0f);
+								*move = D3DXVECTOR3(-moveDash.x * 25.0f, 25.0f, 0.0f);
 
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
 

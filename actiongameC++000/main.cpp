@@ -25,8 +25,6 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	//メモリリークを出力
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	CManager *pManager = NULL;
-
 	WNDCLASSEX wcex =
 	{
 		sizeof(WNDCLASSEX),										//WNDCLASSEXのメモリサイズ
@@ -73,7 +71,8 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 		NULL);													//ウィンドウ作成データ
 
 	//マネージャーの生成初期化処理
-	pManager = new CManager;
+	CManager *pManager = CManager::Get();
+
 	if (pManager != NULL)
 	{
 #ifdef _DEBUG
@@ -154,11 +153,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	//マネージャーの破棄
 	if (pManager != NULL)
 	{
-		//終了処理
-		pManager->Uninit();
-
-		delete pManager;
-		pManager = NULL;
+		pManager->Release();
 	}
 
 	//分解能を戻す

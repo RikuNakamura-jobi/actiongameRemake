@@ -225,7 +225,7 @@ void CObject::UpdateAll(void)
 //=====================================
 void CObject::DrawAll(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 	CObject *pObj;
 
 	for (int nCntPriority = 0; nCntPriority < ALL_PRIORITY; nCntPriority++)

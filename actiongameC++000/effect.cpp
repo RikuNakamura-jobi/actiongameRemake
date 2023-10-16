@@ -76,7 +76,7 @@ CEffect *CEffect::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, D3D
 //=====================================
 HRESULT CEffect::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//テクスチャの読み込み
 	if (FAILED(D3DXCreateTextureFromFile(pDevice,
@@ -123,7 +123,7 @@ void CEffect::Uninit(void)
 //=====================================
 void CEffect::Update(void)
 {
-	CInput *input = CManager::GetInputKeyboard();
+	CInput *input = CManager::Get()->GetInputKeyboard();
 	D3DXVECTOR3 pos = GetPos();
 	D3DXVECTOR3 rot = GetRot();
 	D3DXVECTOR3 move = GetMove();
@@ -162,7 +162,7 @@ void CEffect::Update(void)
 //=====================================
 void CEffect::Draw(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->GetRenderer()->GetDevice();
 
 	//Zテストを無効化
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);

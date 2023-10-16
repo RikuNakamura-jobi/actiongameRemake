@@ -63,6 +63,9 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int
 		pObjectBullet->SetModel(m_model);
 		pObjectBullet->BindModel(pObjectBullet->GetModel());
 
+		pObjectBullet->m_nWave = nWave;
+		pObjectBullet->m_nSpawn = nSpawn;
+
 		//‰Šú‰»
 		if (FAILED(pObjectBullet->Init()))
 		{
@@ -72,8 +75,6 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int
 		pObjectBullet->SetMove(move);
 
 		pObjectBullet->m_nLife = nLife;
-		pObjectBullet->m_nWave = nWave;
-		pObjectBullet->m_nSpawn = nSpawn;
 	}
 
 	return pObjectBullet;
@@ -84,7 +85,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int
 //=====================================
 HRESULT CBullet::Load(void)
 {
-	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();
+	LPDIRECT3DDEVICE9 pDevice = CManager::Get()->Get()->GetRenderer()->GetDevice();
 
 	D3DXMATERIAL *pMat;
 
@@ -217,7 +218,14 @@ HRESULT CBullet::Init(void)
 		GetPos().x, GetPos().y, GetPos().z);
 	D3DXMatrixMultiply(&mtxTemp, &mtxTemp, &mtxTrans);
 
-	m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15);
+	if (m_nWave != -1 && m_nSpawn != -1)
+	{
+		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 6.0f, 0.0f), D3DXVECTOR3(0.0f, -6.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15);
+	}
+	else
+	{
+		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15);
+	}
 
 	SetType(TYPE_BULLET);
 
@@ -247,11 +255,11 @@ void CBullet::Update(void)
 
 	if (m_nWave != -1 && m_nSpawn != -1)
 	{
-		if (CManager::GetScene()->GetEnemyManager() != NULL)
+		if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
 		{
-			if (CManager::GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave) != NULL)
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave) != NULL)
 			{
-				CEnemy *pEnemy = CManager::GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->GetEnemy(m_nSpawn);
+				CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->GetEnemy(m_nSpawn);
 
 				if (pEnemy != NULL)
 				{
