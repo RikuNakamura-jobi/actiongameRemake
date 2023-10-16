@@ -1,0 +1,39 @@
+﻿  bg.cpp
+  bgmulti.cpp
+  bullet.cpp
+  camera.cpp
+  debugproc.cpp
+  effect.cpp
+  enemy.cpp
+  enemymanager.cpp
+  fade.cpp
+  field.cpp
+  input.cpp
+  light.cpp
+  lockon.cpp
+  main.cpp
+  manager.cpp
+  model.cpp
+  motion.cpp
+  number.cpp
+  object.cpp
+  object2D.cpp
+  コンパイル中...
+  object3D.cpp
+  objectbillboard.cpp
+  objectX.cpp
+  orbit.cpp
+  particle.cpp
+  player.cpp
+  renderer.cpp
+  scene.cpp
+  score.cpp
+  sky.cpp
+  sound.cpp
+  texture.cpp
+  time.cpp
+  コード生成しています。
+  All 639 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  コード生成が終了しました。
+  actiongameC++000.vcxproj -> C:\個人\github\actiongameC-\actiongameC++000\actiongameC++000.exe
+  actiongameC++000.vcxproj -> C:\個人\github\actiongameC-\actiongameC++000\actiongameC++000.pdb (Full PDB)
