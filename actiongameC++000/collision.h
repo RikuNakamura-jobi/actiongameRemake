@@ -25,6 +25,15 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	CCollider *GetTop(void) { return m_pTop; }
+	void SetTop(CCollider *collider) { m_pTop = collider; }
+
+	CCollider *GetCur(void) { return m_pCur; }
+	void SetCur(CCollider *collider) { m_pCur = collider; }
+
+	int GetNumAll(void) { return m_nNumAll; }
+	void SetNumAll(int nNumAll) { m_nNumAll = nNumAll; }
+
 	//静的メンバ関数
 	static CCollision *Get(void);
 	static HRESULT Release(void);
@@ -64,14 +73,31 @@ public:
 	void Uninit(void);
 	void Update(void);
 
+	CCollider *GetPrev(void) { return m_pPrev; }
+	void SetPrev(CCollider *collider) { m_pPrev = collider; }
+
+	CCollider *GetNext(void) { return m_pNext; }
+	void SetNext(CCollider *collider) { m_pNext = collider; }
+
+	bool GetDeath(void) { return m_bDeath; }
+	void SetDeath(bool bDeath) { m_bDeath = bDeath; }
+
 	//静的メンバ関数
 	static CCollider *Create(void);
 
 private:
 
 	//メンバ関数
+	bool CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld);			//箱の当たり判定(押し戻しあり)
+	bool CollisionSquareTrigger(D3DXVECTOR3 posTarget);			//箱の当たり判定(内外判定のみ)
+	D3DXVECTOR3 PosRelativeMtx(D3DXVECTOR3 posO, D3DXVECTOR3 rot, D3DXVECTOR3 offset);
 
 	//メンバ変数
+	D3DXVECTOR3 *m_pos;
+	D3DXVECTOR3 *m_rot;
+	D3DXVECTOR3 m_offsetMax;
+	D3DXVECTOR3 m_offsetMin;
+
 	int m_nID;									//自分自身のID
 	int m_nPriority;							//自分自身のID
 	TYPE m_type;

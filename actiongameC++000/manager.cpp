@@ -29,6 +29,7 @@
 #include "fade.h"
 #include "field.h"
 #include "sky.h"
+#include "collision.h"
 
 //マクロ定義---------------------------
 
@@ -288,6 +289,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	m_pCollision = CCollision::Get();
+
 	//各オブジェクトのテクスチャの生成
 	CBullet::Load();
 	CEnemy::Load();
@@ -424,6 +427,13 @@ void CManager::Uninit(void)
 		delete m_pTexture;
 		m_pTexture = NULL;
 	}
+
+	if (m_pCollision != NULL)
+	{
+		//終了処理
+		m_pCollision->Release();
+		m_pCollision = NULL;
+	}
 }
 
 //=====================================
@@ -443,6 +453,7 @@ void CManager::Update(void)
 	m_pRenderer->Update();
 	m_pLight->Update();
 	m_pDebugProc->Update();
+	m_pCollision->Update();
 
 	if (m_pScene != NULL)
 	{

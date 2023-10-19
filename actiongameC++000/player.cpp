@@ -463,7 +463,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 									nNumLock++;
 
 									moveShot.y = (float)((rand() % 3) - 1) * 3;
-									moveShot.z = (float)((rand() % 3) - 1) * 2;
+									moveShot.z = (float)((rand() % 3) - 1) * 5;
 
 									posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
 									posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;

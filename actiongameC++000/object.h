@@ -112,7 +112,6 @@ private:			//外部からアクセス不可能
 	static CObject *m_apTop[ALL_PRIORITY];
 	static CObject *m_apCur[ALL_PRIORITY];
 
-
 };
 
 //構造体定義---------------------------

@@ -9,12 +9,14 @@
 
 #include "main.h"
 #include "object.h"
+#include "collision.h"
 
 //マクロ定義---------------------------
 
 //列挙型定義---------------------------
 
 //クラス定義---------------------------
+class CCollider;
 class CObject3D : public CObject
 {
 public:				//外部からアクセス可能
@@ -101,6 +103,7 @@ private:			//外部からアクセス不可能
 	D3DXCOLOR m_col;
 	D3DXVECTOR2 m_texPos[4];
 	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
+	CCollider m_collider;
 
 	float m_fWidth;
 	float m_fHeight;

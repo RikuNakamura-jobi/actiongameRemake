@@ -281,7 +281,7 @@ void CBullet::Update(void)
 							fRotDiff += (D3DX_PI * 2);
 						}
 
-						fRotMove += fRotDiff * 0.5f;
+						fRotMove += fRotDiff * 0.8f;
 
 						if (fRotMove > D3DX_PI)
 						{
@@ -308,7 +308,7 @@ void CBullet::Update(void)
 							fRotDiff += (D3DX_PI * 2);
 						}
 
-						fRotMove += fRotDiff * 0.5f;
+						fRotMove += fRotDiff * 0.8f;
 
 						if (fRotMove > D3DX_PI)
 						{

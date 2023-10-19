@@ -25,6 +25,7 @@ class CTexture;
 class CPlayer;
 class CObject3D;
 class CEnemyManager;
+class CCollision;
 class CManager
 {
 public:				//外部からアクセス可能
@@ -52,6 +53,8 @@ public:				//外部からアクセス可能
 	CDebugProc *GetDebugProc(void) { return m_pDebugProc; }
 
 	CTexture *GetTexture(void) { return m_pTexture; }
+
+	CCollision *GetCollision(void) { return m_pCollision; }
 
 	void SetMode(CScene::MODE mode);
 	CScene::MODE GetMode(void) { return m_pScene->GetMode(); }
@@ -81,6 +84,7 @@ private:			//外部からアクセス不可能
 	CTexture *m_pTexture;
 	CScene *m_pScene;
 	CEnemyManager *m_pEnemyManager;
+	CCollision *m_pCollision;
 	int m_nCountFPS;
 
 	//静的メンバ変数

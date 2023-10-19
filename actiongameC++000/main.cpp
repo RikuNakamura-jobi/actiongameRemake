@@ -154,6 +154,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 	if (pManager != NULL)
 	{
 		pManager->Release();
+		pManager = NULL;
 	}
 
 	//•ª‰ð”\‚ð–ß‚·
