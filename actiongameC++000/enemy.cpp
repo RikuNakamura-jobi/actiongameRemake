@@ -11,6 +11,7 @@
 #include "bullet.h"
 #include "scene.h"
 #include "lockon.h"
+#include "collision.h"
 #include "enemymanager.h"
 #include "objectX.h"
 #include "debugproc.h"
@@ -195,6 +196,9 @@ HRESULT CEnemy::Init(void)
 
 	m_nLife = 10;
 	SetType(TYPE_ENEMY);
+
+	SetCollider(CCollider::Create(GetPosPointa(), GetRotPointa(), D3DXVECTOR3(100.0f, 300.0f, 100.0f), D3DXVECTOR3(-100.0f, -5.0f, -100.0f)));
+	GetCollider()->SetType(CCollider::TYPE_BOX);
 
 	return S_OK;
 }

@@ -47,6 +47,7 @@ public:				//外部からアクセス可能
 	//位置
 	void SetPos(D3DXVECTOR3 pos){ m_pos = pos; }
 	D3DXVECTOR3 GetPos(void) { return m_pos; }
+	D3DXVECTOR3 *GetPosPointa(void) { return &m_pos; }
 
 	//前の位置
 	void SetPosOld(D3DXVECTOR3 posOld) { m_posOld = posOld; }
@@ -59,6 +60,7 @@ public:				//外部からアクセス可能
 	//角度
 	void SetRot(D3DXVECTOR3 rot) { m_rot = rot; }
 	D3DXVECTOR3 GetRot(void) { return m_rot; }
+	D3DXVECTOR3 *GetRotPointa(void) { return &m_rot; }
 
 	//角度
 	void SetMtx(D3DXMATRIX mtx) { m_mtxWorld = mtx; }

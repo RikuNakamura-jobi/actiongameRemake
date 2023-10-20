@@ -21,6 +21,7 @@
 #include "field.h"
 #include "scene.h"
 #include "particle.h"
+#include "collision.h"
 #include "enemy.h"
 #include "enemymanager.h"
 #include "debugproc.h"
@@ -97,7 +98,7 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, TYPE type)
 
 		pObjectPlayer->Set(pos, rot, 0.0f, 0.0f);
 		pObjectPlayer->SetSave(false);
-
+			
 		if (pObjectPlayer->m_Type == TYPE_SAVEDATA)
 		{
 			pObjectPlayer->SetSave(CManager::Get()->Get()->Get()->GetScene()->GetPlayer());
@@ -188,6 +189,7 @@ HRESULT CPlayer::Init(void)
 	}
 
 	SetType(TYPE_PLAYER);
+	SetCollider(CCollider::Create(&m_pos, &m_rot, D3DXVECTOR3(100.0f, 100.0f, 100.0f), D3DXVECTOR3(-100.0f, -5.0f, -100.0f)));
 
 	return S_OK;
 }
@@ -295,10 +297,9 @@ void CPlayer::Update(void)
 			m_nEasterTimer = 0;
 		}
 	}
-	else
-	{
-		Collision(&pos, &move);
-	}
+
+	Collision(&pos, &move);
+	
 
 	if (CManager::Get()->Get()->GetScene()->GetField() != NULL)
 	{
@@ -668,7 +669,9 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 
 					if (pEnemy != NULL)
 					{
-						if (hypotf(pos->x - pEnemy->GetPos().x, pos->z - pEnemy->GetPos().z) < 100.0f && pos->y > pEnemy->GetPos().y && pos->y < pEnemy->GetPos().y + 300.0f)
+						CCollider *m_pCollider = pEnemy->GetCollider();
+
+						if (pEnemy->GetCollider()->CollisionSquare(&m_pos, m_posOld) == true)
 						{
 							if (m_state == STATE_KICK)
 							{
@@ -681,7 +684,7 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
 
-								m_state = STATE_DAMAGE;
+								m_state = STATE_NORMAL;
 
 								pEnemy->SetLockon();
 							}

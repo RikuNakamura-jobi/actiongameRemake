@@ -82,14 +82,17 @@ public:
 	bool GetDeath(void) { return m_bDeath; }
 	void SetDeath(bool bDeath) { m_bDeath = bDeath; }
 
+	void SetType(TYPE type) { m_type = type; }
+
+	bool CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld);			//箱の当たり判定(押し戻しあり)
+	bool CollisionSquareTrigger(D3DXVECTOR3 posTarget);			//箱の当たり判定(内外判定のみ)
+
 	//静的メンバ関数
-	static CCollider *Create(void);
+	static CCollider *Create(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pRot, D3DXVECTOR3 offsetMax, D3DXVECTOR3 offsetMin);
 
 private:
 
 	//メンバ関数
-	bool CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld);			//箱の当たり判定(押し戻しあり)
-	bool CollisionSquareTrigger(D3DXVECTOR3 posTarget);			//箱の当たり判定(内外判定のみ)
 	D3DXVECTOR3 PosRelativeMtx(D3DXVECTOR3 posO, D3DXVECTOR3 rot, D3DXVECTOR3 offset);
 
 	//メンバ変数

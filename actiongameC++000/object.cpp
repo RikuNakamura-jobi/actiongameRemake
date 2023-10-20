@@ -8,6 +8,7 @@
 #include "debugproc.h"
 #include "manager.h"
 #include "renderer.h"
+#include "collision.h"
 
 //ƒ}ƒNƒ’è‹`---------------------------
 
@@ -261,6 +262,11 @@ void CObject::Release(void)
 {
 	int nIdx = m_nID;
 	int nPriority = m_nPriority;
+
+	if (m_pCollider != NULL)
+	{
+		m_pCollider->Uninit();
+	}
 
 	m_bDeath = true;
 }

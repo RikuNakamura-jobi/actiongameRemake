@@ -7,6 +7,7 @@
 #include "collision.h"
 #include "manager.h"
 #include "renderer.h"
+#include "effect.h"
 
 //ƒ}ƒNƒ’è‹`---------------------------
 
@@ -146,20 +147,28 @@ void CCollision::Update(void)
 //=====================================
 CCollider::CCollider()
 {
-
+	m_pos = NULL;
+	m_rot = NULL;
+	m_offsetMax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_offsetMin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 CCollider::~CCollider()
 {
 }
 
-CCollider *CCollider::Create(void)
+CCollider *CCollider::Create(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pRot, D3DXVECTOR3 offsetMax, D3DXVECTOR3 offsetMin)
 {
 	CCollider *pCllider = new CCollider;
 
 	if (pCllider != NULL)
 	{
 		pCllider->Init();
+
+		pCllider->m_pos = pPos;
+		pCllider->m_rot = pRot;
+		pCllider->m_offsetMax = offsetMax;
+		pCllider->m_offsetMin = offsetMin;
 	}
 
 	return pCllider;
@@ -208,7 +217,11 @@ void CCollider::Uninit(void)
 //=====================================
 void CCollider::Update(void)
 {
-
+#ifdef _DEBUG
+	CEffect::Create(*m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), *m_rot, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 3, 10.0f, 10.0f);
+	CEffect::Create(PosRelativeMtx(*m_pos, *m_rot, m_offsetMax), D3DXVECTOR3(0.0f, 0.0f, 0.0f), *m_rot, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), 3, 10.0f, 10.0f);
+	CEffect::Create(PosRelativeMtx(*m_pos, *m_rot, m_offsetMin), D3DXVECTOR3(0.0f, 0.0f, 0.0f), *m_rot, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), 3, 10.0f, 10.0f);
+#endif //_DEBUG
 }
 
 //==================================================================================================

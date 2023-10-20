@@ -170,7 +170,7 @@ CEnemySpawn *CEnemySpawn::Create(int nWave, int nEnemySpaen)
 		{
 			if (pEnemyManager->m_apObject2D[nCnt] == NULL)
 			{
-				pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(300.0f * nCnt, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
+				pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(500.0f * nCnt + 1.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
 				pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
 			}
 		}
@@ -190,7 +190,7 @@ HRESULT CEnemySpawn::Init(void)
 	{
 		if (m_apObject2D[nCnt] != NULL)
 		{
-			m_apObject2D[nCnt]->Init();
+			//m_apObject2D[nCnt]->Init();
 		}
 	}
 

@@ -16,6 +16,7 @@
 //列挙型定義---------------------------
 
 //クラス定義---------------------------
+class CCollider;
 class CObject
 {
 public:				//外部からアクセス可能
@@ -81,6 +82,9 @@ public:				//外部からアクセス可能
 	CObject *GetObjectPrev(void) { return m_pPrev; }
 	void SetObjectPrev(CObject *pPrev) { m_pPrev = pPrev; }
 
+	CCollider *GetCollider(void) { return m_pCollider; }
+	void SetCollider(CCollider *pCollider) { m_pCollider = pCollider; }
+
 	//静的メンバ関数
 	static void ReleaseAll(void);
 	static void ReleaseTYPE(TYPE type);
@@ -98,6 +102,7 @@ private:			//外部からアクセス不可能
 	//メンバ関数
 
 	//メンバ変数
+	CCollider *m_pCollider;
 	int m_nID;									//自分自身のID
 	int m_nPriority;							//自分自身のID
 	TYPE m_type;
