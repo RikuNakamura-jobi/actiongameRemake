@@ -66,12 +66,13 @@ CEnemyManager *CEnemyManager::Create(void)
 HRESULT CEnemyManager::Init(void)
 {
 	m_apEnemyWave[0] = CEnemySpawn::Create(0, 5);
+	m_apEnemyWave[1] = CEnemySpawn::Create(1, 1);
 
 	for (int nCnt = 0; nCnt < MAX_ENEMY_WAVE; nCnt++)
 	{
 		if (m_apEnemyWave[nCnt] != NULL)
 		{
-			m_apEnemyWave[nCnt]->Init();
+			//m_apEnemyWave[nCnt]->Init();
 		}
 	}
 
@@ -106,12 +107,25 @@ void CEnemyManager::Update(void)
 		{
 			if (m_apEnemyWave[nCnt]->Update() == 0)
 			{
-				m_apEnemyWave[nCnt]->Uninit();
+				if (nCnt == 0)
+				{
+					m_apEnemyWave[nCnt]->Uninit();
 
-				delete m_apEnemyWave[nCnt];
+					delete m_apEnemyWave[nCnt];
+					m_apEnemyWave[nCnt] = NULL;
+					//CManager::Get()->GetScene()->SetFinish();
 
-				m_apEnemyWave[nCnt] = CEnemySpawn::Create(nCnt, 5);
-				m_apEnemyWave[nCnt]->Init();
+					//m_apEnemyWave[nCnt] = CEnemySpawn::Create(nCnt, 5);
+				}
+				else
+				{
+					m_apEnemyWave[nCnt]->Uninit();
+
+					delete m_apEnemyWave[nCnt];
+					m_apEnemyWave[nCnt] = NULL;
+
+					CManager::Get()->GetScene()->SetFinish();
+				}
 			}
 		}
 	}
@@ -170,8 +184,16 @@ CEnemySpawn *CEnemySpawn::Create(int nWave, int nEnemySpaen)
 		{
 			if (pEnemyManager->m_apObject2D[nCnt] == NULL)
 			{
-				pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(500.0f * nCnt + 1.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
-				pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+				if (nWave == 0)
+				{
+					pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(300.0f * nCnt + 1.0f, 100.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
+					pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+				}
+				else
+				{
+					pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(-2000.0f, 100.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
+					pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+				}
 			}
 		}
 

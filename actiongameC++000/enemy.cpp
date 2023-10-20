@@ -59,14 +59,13 @@ CEnemy *CEnemy::Create(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHe
 
 		pObjectEnemy->SetModel(m_model);
 		pObjectEnemy->BindModel(pObjectEnemy->GetModel());
+		pObjectEnemy->m_nWave = nWave;
 
 		//初期化
 		if (FAILED(pObjectEnemy->Init()))
 		{
 			pObjectEnemy->Release();
 		}
-
-		pObjectEnemy->m_nWave = nWave;
 	}
 
 	return pObjectEnemy;
@@ -82,7 +81,7 @@ HRESULT CEnemy::Load(void)
 	D3DXMATERIAL *pMat;
 
 	//xファイルの読み込み
-	D3DXLoadMeshFromX("data/MODEL/maidGobrin000.x",
+	D3DXLoadMeshFromX("data/MODEL/actionEnemy000.x",
 		D3DXMESH_SYSTEMMEM,
 		pDevice,
 		NULL,
@@ -197,8 +196,16 @@ HRESULT CEnemy::Init(void)
 	m_nLife = 10;
 	SetType(TYPE_ENEMY);
 
-	SetCollider(CCollider::Create(GetPosPointa(), GetRotPointa(), D3DXVECTOR3(100.0f, 300.0f, 100.0f), D3DXVECTOR3(-100.0f, -5.0f, -100.0f)));
-	GetCollider()->SetType(CCollider::TYPE_BOX);
+	if (m_nWave == 1)
+	{
+		SetCollider(CCollider::Create(GetPosPointa(), GetRotPointa(), D3DXVECTOR3(120.0f, 90.0f, 120.0f), D3DXVECTOR3(-120.0f, -90.0f, -120.0f)));
+		GetCollider()->SetType(CCollider::TYPE_BOX);
+	}
+	else
+	{
+		SetCollider(CCollider::Create(GetPosPointa(), GetRotPointa(), D3DXVECTOR3(40.0f, 30.0f, 40.0f), D3DXVECTOR3(-40.0f, -30.0f, -40.0f)));
+		GetCollider()->SetType(CCollider::TYPE_BOX);
+	}
 
 	return S_OK;
 }
@@ -243,7 +250,7 @@ void CEnemy::Update(void)
 
 	//現在の角度と目的の角度の差分を計算
 	fRotMove = rot.y;
-	fRotDest = atan2f(move.x, move.z);
+	fRotDest = atan2f(pos.x - CManager::Get()->GetScene()->GetPlayer()->GetPos().x, pos.z - CManager::Get()->GetScene()->GetPlayer()->GetPos().z);
 	fRotDiff = fRotDest - fRotMove;
 
 	if (fRotDiff > 3.14f)
@@ -298,6 +305,11 @@ void CEnemy::Update(void)
 //=====================================
 void CEnemy::Draw(void)
 {
+	if (m_nWave == 1)
+	{
+		SetMtxScale(3.0f);
+	}
+
 	CObjectX::Draw();
 }
 

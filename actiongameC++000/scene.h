@@ -67,6 +67,8 @@ public:				//外部からアクセス可能
 
 	virtual CEnemyManager *GetEnemyManager(void) { return NULL; }
 
+	virtual void SetFinish(void) { return; }
+
 	void addCntFade(void) { m_nCntFade++; }
 	int GetCntFade(void) { return m_nCntFade; }
 
@@ -197,6 +199,8 @@ public:				//外部からアクセス可能
 	CEnemyManager *GetEnemyManager(void) { return m_pEnemyManager; }
 
 	CSky *GetSky(void) { return m_pSky; }
+
+	void SetFinish(void) { m_bFinish = true; }
 
 	//静的メンバ関数
 

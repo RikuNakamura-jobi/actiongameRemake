@@ -52,6 +52,7 @@ private:			//外部からアクセス不可能
 	int m_nLife;
 	int m_nWave;
 	int m_nSpawn;
+	float m_pow;
 	MODELX m_modelTemp;
 	COrbit *m_orbit;
 

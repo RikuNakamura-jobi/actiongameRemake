@@ -26,7 +26,7 @@ CObjectX::CObjectX(int nPriority = 6) : CObject(nPriority)
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+	m_mtxScale = 1.0f;
 	//m_model->pTexture = NULL;
 	//m_model->pMeshModel = NULL;
 	//m_model->pBuffMatModel = NULL;					//頂点情報を格納
@@ -100,6 +100,10 @@ void CObjectX::Draw(void)
 
 	//ワールドマトリックスの初期化
 	D3DXMatrixIdentity(&m_mtxWorld);
+
+	m_mtxWorld._11 *= m_mtxScale;
+	m_mtxWorld._22 *= m_mtxScale;
+	m_mtxWorld._33 *= m_mtxScale;
 
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot,

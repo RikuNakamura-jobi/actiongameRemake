@@ -227,7 +227,7 @@ void CCollider::Update(void)
 //==================================================================================================
 //“_‚Æ” ‚Ì“–‚½‚è”»’è
 //==================================================================================================
-bool CCollider::CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld)
+bool CCollider::CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld, D3DXVECTOR3 *move)
 {
 	D3DXVECTOR3 posCorner[8] = {};
 	D3DXVECTOR3 posPlaneCenter[6] = {};
@@ -288,7 +288,7 @@ bool CCollider::CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld
 
 				vecMove = *posTarget - vecIntersect;
 
-				vecMoveRef = vecMove + (vecNorPlaneCenter * fDot * 1.001f);
+				vecMoveRef = vecMove + (vecNorPlaneCenter * fDot * 1.0001f);
 				D3DXVec3Normalize(&vecMoveRef, &vecMoveRef);
 				vecMoveRef *= D3DXVec3Length(&vecMove);
 

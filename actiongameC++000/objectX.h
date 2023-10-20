@@ -66,6 +66,8 @@ public:				//外部からアクセス可能
 	void SetMtx(D3DXMATRIX mtx) { m_mtxWorld = mtx; }
 	D3DXMATRIX GetMtx(void) { return m_mtxWorld; }
 
+	void SetMtxScale(float mtxScale) { m_mtxScale = mtxScale; }
+
 	//静的メンバ関数
 	static CObjectX *Create(void);
 
@@ -81,6 +83,7 @@ private:			//外部からアクセス不可能
 	D3DXVECTOR3 m_move;
 	D3DXVECTOR3 m_rot;
 	D3DXMATRIX m_mtxWorld;		//ワールドマトリックス
+	float m_mtxScale;
 
 	MODELX *m_model;
 

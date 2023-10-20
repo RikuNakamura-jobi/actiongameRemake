@@ -84,8 +84,8 @@ public:
 
 	void SetType(TYPE type) { m_type = type; }
 
-	bool CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld);			//箱の当たり判定(押し戻しあり)
-	bool CollisionSquareTrigger(D3DXVECTOR3 posTarget);			//箱の当たり判定(内外判定のみ)
+	bool CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld, D3DXVECTOR3 *move);			//箱の当たり判定(押し戻しあり)
+	bool CollisionSquareTrigger(D3DXVECTOR3 posTarget);													//箱の当たり判定(内外判定のみ)
 
 	//静的メンバ関数
 	static CCollider *Create(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pRot, D3DXVECTOR3 offsetMax, D3DXVECTOR3 offsetMin);

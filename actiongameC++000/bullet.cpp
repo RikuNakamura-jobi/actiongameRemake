@@ -13,6 +13,7 @@
 #include "score.h"
 #include "orbit.h"
 #include "lockon.h"
+#include "collision.h"
 #include "enemy.h"
 #include "enemymanager.h"
 #include "debugproc.h"
@@ -39,6 +40,7 @@ CBullet::CBullet(int nPriority = 5) : CObjectX(nPriority)
 {
 	memset(&m_modelTemp, 0, sizeof(MODELX));
 	m_nLife = 0;
+	m_pow = 0.3f;
 	m_orbit = NULL;
 }
 
@@ -267,6 +269,13 @@ void CBullet::Update(void)
 					{
 						float fRotMove, fRotDest, fRotDiff;
 						float length = D3DXVec3Length(&move);
+						float epos = pEnemy->GetPos().x;
+
+						if (m_nLife < 195)
+						{
+							m_pow = 1.0f;
+							//move *= 0.3f;
+						}
 
 						fRotMove = atan2f(move.x, move.z);
 						fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().z - pos.z);
@@ -281,7 +290,7 @@ void CBullet::Update(void)
 							fRotDiff += (D3DX_PI * 2);
 						}
 
-						fRotMove += fRotDiff * 0.8f;
+						fRotMove += fRotDiff * m_pow;
 
 						if (fRotMove > D3DX_PI)
 						{
@@ -308,7 +317,7 @@ void CBullet::Update(void)
 							fRotDiff += (D3DX_PI * 2);
 						}
 
-						fRotMove += fRotDiff * 0.8f;
+						fRotMove += fRotDiff * m_pow;
 
 						if (fRotMove > D3DX_PI)
 						{
@@ -405,7 +414,7 @@ bool CBullet::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move
 
 			if (type == TYPE_ENEMY)
 			{
-				if (hypotf(pos->x - pObj->GetPos().x, pos->z - pObj->GetPos().z) < 100.0f && pos->y > pObj->GetPos().y && pos->y < pObj->GetPos().y + 300.0f)
+				if (pObj->GetCollider()->CollisionSquareTrigger(*pos) == true)
 				{
 					/*CExplosion::Create(*pos, GetRot(), 64.0f, 64.0f);*/
 
