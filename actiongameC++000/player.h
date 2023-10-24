@@ -47,6 +47,7 @@ public:				//外部からアクセス可能
 	{
 		STATE_NORMAL = 0,		//通常
 		STATE_KICK,
+		STATE_HIT,
 		STATE_DAMAGE,
 		STATE_MAX
 	}STATE;

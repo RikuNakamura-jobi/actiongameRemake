@@ -274,35 +274,7 @@ void CBullet::Update(void)
 						if (m_nLife < 195)
 						{
 							m_pow = 1.0f;
-							//move *= 0.3f;
 						}
-
-						fRotMove = atan2f(move.x, move.z);
-						fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().z - pos.z);
-						fRotDiff = fRotDest - fRotMove;
-
-						if (fRotDiff > D3DX_PI)
-						{
-							fRotDiff -= (D3DX_PI * 2);
-						}
-						else if (fRotDiff < -D3DX_PI)
-						{
-							fRotDiff += (D3DX_PI * 2);
-						}
-
-						fRotMove += fRotDiff * m_pow;
-
-						if (fRotMove > D3DX_PI)
-						{
-							fRotMove -= (D3DX_PI * 2);
-						}
-						else if (fRotMove < -D3DX_PI)
-						{
-							fRotMove += (D3DX_PI * 2);
-						}
-
-						move.x = sinf(fRotMove) * length;
-						move.z = cosf(fRotMove) * length;
 
 						fRotMove = atan2f(move.x, move.z);
 						fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().y - pos.y);
@@ -328,6 +300,7 @@ void CBullet::Update(void)
 							fRotMove += (D3DX_PI * 2);
 						}
 
+						move.x = sinf(fRotMove) * length;
 						move.y = cosf(fRotMove) * length;
 					}
 				}
@@ -397,45 +370,84 @@ void CBullet::Draw(void)
 //=====================================
 bool CBullet::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move, D3DXVECTOR3 *rot)
 {
-	for (int nCntPri = 0; nCntPri < ALL_PRIORITY; nCntPri++)
+	if (m_nWave != -1 && m_nSpawn != -1)
 	{
-		CObject *pObj;
-
-		pObj = GetObjectTop(nCntPri);
-
-		while (pObj != NULL)
+		if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
 		{
-			CObject *pObjNext = pObj->GetObjectNext();
-
-			TYPE type;
-
-			//Ží—ÞŽæ“¾
-			type = pObj->GetType();
-
-			if (type == TYPE_ENEMY)
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave) != NULL)
 			{
-				if (pObj->GetCollider()->CollisionSquareTrigger(*pos) == true)
+				CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->GetEnemy(m_nSpawn);
+
+				if (pEnemy != NULL)
 				{
-					/*CExplosion::Create(*pos, GetRot(), 64.0f, 64.0f);*/
-
-					pObj->Damage(1);
-
-					if (pObj->GetLife() <= 0)
+					if (pEnemy->GetLockon() != NULL)
 					{
-						CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
+						if (pEnemy->GetCollider()->CollisionSquareTrigger(*pos) == true)
+						{
+							/*CExplosion::Create(*pos, GetRot(), 64.0f, 64.0f);*/
 
-						pObj->Uninit();
+							pEnemy->Damage(1);
 
-						CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
+							if (pEnemy->GetLife() <= 0)
+							{
+								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
+
+								pEnemy->Uninit();
+
+								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
+							}
+
+							Uninit();
+
+							return true;
+						}
 					}
-
-					Uninit();
-
-					return true;
 				}
 			}
+		}
+	}
+	else
+	{
+		for (int nCntPri = 0; nCntPri < ALL_PRIORITY; nCntPri++)
+		{
+			CObject *pObj;
 
-			pObj = pObjNext;
+			pObj = GetObjectTop(nCntPri);
+
+			while (pObj != NULL)
+			{
+				CObject *pObjNext = pObj->GetObjectNext();
+
+				TYPE type;
+
+				//Ží—ÞŽæ“¾
+				type = pObj->GetType();
+
+				if (type == TYPE_ENEMY)
+				{
+					if (pObj->GetCollider()->CollisionSquareTrigger(*pos) == true)
+					{
+						/*CExplosion::Create(*pos, GetRot(), 64.0f, 64.0f);*/
+
+						pObj->Damage(1);
+
+						if (pObj->GetLife() <= 0)
+						{
+							CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
+
+							pObj->Uninit();
+
+							CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
+						}
+
+						Uninit();
+
+						return true;
+					}
+				}
+
+				pObj = pObjNext;
+			}
 		}
 	}
 

@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpCmdLine
 			return -1;
 		}
 #else
-		if (FAILED(pManager->Init(hinstance, hWnd, TRUE)))
+		if (FAILED(pManager->Init(hinstance, hWnd, FALSE)))
 		{
 			return -1;
 		}

@@ -227,7 +227,7 @@ void CPlayer::Update(void)
 	float fWidth = GetWidth();
 	m_bShot = false;
 
-	if (m_state != STATE_KICK)
+	if (m_state != STATE_KICK && m_state != STATE_HIT)
 	{
 		Control(&pos, &posOld, &rot, &move, &fHeight, &fWidth);
 
@@ -243,7 +243,7 @@ void CPlayer::Update(void)
 	{
 		if (m_pMotion->IsFinish())
 		{
-			move *= 0.3f;
+			move *= 0.0f;
 		}
 	}
 
@@ -298,8 +298,23 @@ void CPlayer::Update(void)
 		}
 	}
 
-	Collision(&pos, &move);
-	
+	if (m_state == STATE_HIT)
+	{
+		m_nEasterTimer++;
+
+		if (m_nEasterTimer > 10)
+		{
+			m_state = STATE_NORMAL;
+			m_nEasterTimer = 0;
+		}
+
+		move.y -= 1.0f;
+	}
+
+	if (m_state != STATE_HIT)
+	{
+		Collision(&pos, &move);
+	}
 
 	if (CManager::Get()->Get()->GetScene()->GetField() != NULL)
 	{
@@ -409,20 +424,26 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 		if (input->GetPress(DIK_A) == true)
 		{//Aキーが押された時
-			move->x = 25.0f;
+			move->x = 50.0f;
 		}
 		else if (input->GetPress(DIK_D) == true)
 		{//Dキーが押された時
-			move->x = -25.0f;
+			move->x = -50.0f;
 		}
 
 		if (input->GetPress(DIK_W) == true)
 		{//Aキーが押された時
-			move->y = 25.0f;
+			move->y = 50.0f;
 		}
 		else if (input->GetPress(DIK_S) == true)
 		{//Dキーが押された時
-			move->y = -25.0f;
+			move->y = -50.0f;
+		}
+
+		if (move->x == 0.0f && move->y == 0.0f)
+		{
+			move->x = -50.0f;
+			move->y = -50.0f;
 		}
 
 		m_state = STATE_KICK;
@@ -445,6 +466,11 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		m_bShot = true;
 		int nNumLock = 0;
 
+		if (m_state != STATE_KICK)
+		{
+			move->y = -1.0f;
+		}
+
 		if (m_nShotTimer % 15 == 0 || m_nShotTimer == 0)
 		{
 			if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
@@ -464,7 +490,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 									nNumLock++;
 
 									moveShot.y = (float)(rand() % 3 + 1);
-									moveShot.z = (float)((rand() % 3) - 1) * 3;
+									//moveShot.z = (float)((rand() % 3) - 1) * 3;
 
 									posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
 									posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
@@ -523,18 +549,26 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 	if (lengthStick > 10.0f)
 	{
 		move->x += sinf(rotCamera.y - RotStick) * -1.5f;
-		move->z += cosf(rotCamera.y - RotStick) * -1.5f;
 
-		m_rotDest.z = rotCamera.y - RotStick;
-		m_rotMove.z = RotStick;
+		if (input->GetLStickLRPress() > 0)
+		{
+			m_rotDest.z = rotCamera.y - D3DX_PI * 0.5f;
+			m_rotMove.z = D3DX_PI * 0.5f;
+		}
+		else
+		{
+			m_rotDest.z = rotCamera.y + D3DX_PI * 0.5f;
+			m_rotMove.z = -D3DX_PI * 0.5f;
+		}
 	}
 
 	if (input->GetButtonTrigger(6) == true)
 	{
-		move->x += sinf(rotCamera.y) * 120.0f;
-		move->z += cosf(rotCamera.y) * 120.0f;
-		move->y = move->y * 0.0f;
-		m_rotDest.z = rotCamera.y - D3DX_PI;
+		move->x = 0.0f;
+		move->y = 0.0f;
+
+		move->x = 50.0f * sinf(D3DX_PI + RotStick);
+		move->y = 50.0f * cosf(D3DX_PI + RotStick);
 
 		m_state = STATE_KICK;
 	}
@@ -547,31 +581,77 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 
 	if (input->GetButtonPress(7) == true)
 	{//Gキーが押された時
-		D3DXVECTOR3 moveShot = CManager::Get()->Get()->GetScene()->GetCamera()->GetPosR() - CManager::Get()->Get()->GetScene()->GetCamera()->GetPosV();
+		D3DXVECTOR3 moveShot = { 0.0f,0.0f,0.0f };
+		moveShot.x = -sinf(m_rotDest.z);
+		moveShot.y = -cosf(m_rotDest.z);
 		D3DXVECTOR3 posGun;
 		D3DXVec3Normalize(&moveShot, &moveShot);
-		m_rotDest.z = rotCamera.y - D3DX_PI;
-		m_bShot = true;
 		m_nShotTimer++;
+		m_bShot = true;
+		int nNumLock = 0;
 
-		if (m_nShotTimer % 5 == 0)
+		if (m_state != STATE_KICK)
 		{
-			if (m_nShotTimer % 10 == 0)
+			move->y = -1.0f;
+		}
+
+		if (m_nShotTimer % 15 == 0 || m_nShotTimer == 0)
+		{
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
+			{
+				for (int nCntWave = 0; nCntWave < MAX_ENEMY_WAVE; nCntWave++)
+				{
+					if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
+					{
+						for (int nCntNum = 0; nCntNum < MAX_ENEMY_SPAWN; nCntNum++)
+						{
+							CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
+
+							if (pEnemy != NULL)
+							{
+								if (pEnemy->GetLockon() != NULL)
+								{
+									nNumLock++;
+
+									moveShot.y = (float)(rand() % 3 + 1);
+									//moveShot.z = (float)((rand() % 3) - 1) * 3;
+
+									posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
+									posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
+									posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
+
+									CBullet::Create(posGun, moveShot * 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200);
+
+									CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (nNumLock == 0)
 			{
 				posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
 				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
 				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
-			}
-			else if (m_nShotTimer % 10 == 5)
-			{
-				posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._41;
-				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._42;
-				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(17)->GetMtxWorld()._43;
-			}
 
-			CBullet::Create(posGun, moveShot * 100.0f, D3DXVECTOR3(rot->x, m_rotDest.z, rot->z), -1, -1, 16.0f, 16.0f, 200);
+				CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1, -1, 16.0f, 16.0f, 200);
 
-			CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
+				CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
+			}
+		}
+	}
+	else
+	{
+		if (m_nShotTimer > 15)
+		{
+			m_nShotTimer = -1;
+		}
+
+		if (m_nShotTimer >= 0)
+		{
+			m_nShotTimer++;
 		}
 	}
 }
@@ -677,29 +757,39 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 
 					if (pEnemy != NULL)
 					{
-						if (pEnemy->GetCollider()->CollisionSquare(pos, m_posOld, move) == true)
+						if (pEnemy->GetCollider()->CollisionSquareTrigger(*pos) == true)
 						{
 							if (m_state == STATE_KICK)
 							{
 								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
 
-								move->x *= -0.8f;
-								move->y *= -0.8f;
+								move->x *= 1.1f;
+								move->y *= 1.1f;
+
 								pos->z = 0.0f;
 								move->z = 0.0f;
 
+								*pos += *move;
+
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
 
-								m_state = STATE_NORMAL;
+								m_pMotion->Set(MOTION_KICK);
 
 								pEnemy->SetLockon();
 							}
 							else
 							{
-								move->x *= -0.8f;
-								move->y *= -0.8f;
+								move->x *= -1.0f;
+								move->y *= -1.0f;
+
+								D3DXVec3Normalize(move, move);
+
+								*move *= 20.0f;
+
 								pos->z = 0.0f;
 								move->z = 0.0f;
+
+								*pos += *move;
 								
 								m_state = STATE_DAMAGE;
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);

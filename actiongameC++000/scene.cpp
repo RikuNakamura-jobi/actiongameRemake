@@ -132,7 +132,7 @@ void CTitle::Update(void)
 
 	if (input->GetTrigger(DIK_RETURN) == true && CFade::GetState() == 0)
 	{
-		CFade::Create(CFade::TYPE_SLIDE, MODE_RESULT);
+		CFade::Create(CFade::TYPE_OUT, MODE_RESULT);
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_YES);
 	}
 
@@ -140,7 +140,7 @@ void CTitle::Update(void)
 	{
 		if (inputPad->GetButtonTrigger(11) == true && CFade::GetState() == 0)
 		{
-			CFade::Create(CFade::TYPE_SLIDE, MODE_RESULT);
+			CFade::Create(CFade::TYPE_OUT, MODE_RESULT);
 			CSound::PlaySound(CSound::SOUND_LABEL_SE_YES);
 		}
 	}
@@ -420,7 +420,7 @@ void CGame::Update(void)
 
 	if (GetCntFade() == 300 && CFade::GetState() == 0)
 	{
-		CFade::Create(CFade::TYPE_SLIDE, MODE_RESULT);
+		CFade::Create(CFade::TYPE_OUT, MODE_RESULT);
 	}
 
 	if (GetbFade() == true)
@@ -502,7 +502,7 @@ void CResult::Update(void)
 	if ((input->GetTrigger(DIK_RETURN) == true || GetCntFade() == TIME_FADE) && CFade::GetState() == 0)
 	{
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_YES);
-		CFade::Create(CFade::TYPE_SLIDE, MODE_TITLE);
+		CFade::Create(CFade::TYPE_OUT, MODE_TITLE);
 	}
 
 	if (inputPad != NULL)
@@ -510,7 +510,7 @@ void CResult::Update(void)
 		if ((inputPad->GetButtonTrigger(11) == true || GetCntFade() == TIME_FADE) && CFade::GetState() == 0)
 		{
 			CSound::PlaySound(CSound::SOUND_LABEL_SE_YES);
-			CFade::Create(CFade::TYPE_SLIDE, MODE_TITLE);
+			CFade::Create(CFade::TYPE_OUT, MODE_TITLE);
 		}
 	}
 

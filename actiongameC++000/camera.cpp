@@ -84,27 +84,27 @@ void CCamera::Update(void)
 
 	if (input->GetPress(DIK_J) == true)
 	{//Aキーが押された時
-		m_rot.y -= 0.04f;
+		//m_rot.y -= 0.04f;
 	}
 	if (input->GetPress(DIK_L) == true)
 	{//Dキーが押された時
-		m_rot.y += 0.04f;
+		//m_rot.y += 0.04f;
 	}
 	if (input->GetPress(DIK_I) == true)
 	{//Aキーが押された時
-		m_rot.z -= 0.04f;
+		//m_rot.z -= 0.04f;
 	}
 	if (input->GetPress(DIK_K) == true)
 	{//Dキーが押された時
-		m_rot.z += 0.04f;
+		//m_rot.z += 0.04f;
 	}
 
 	if (inputPad != NULL)
 	{
 		if (lengthStick > 10.0f)
 		{
-			m_rot.y += (float)inputPad->GetRStickLRPress() * 0.001f * 0.04f;
-			m_rot.z += (float)inputPad->GetRStickUDPress() * 0.001f * 0.04f;
+			//m_rot.y += (float)inputPad->GetRStickLRPress() * 0.001f * 0.04f;
+			//m_rot.z += (float)inputPad->GetRStickUDPress() * 0.001f * 0.04f;
 		}
 	}
 
@@ -112,8 +112,8 @@ void CCamera::Update(void)
 
 	if (lengthStick > 10.0f)
 	{
-		m_rot.y += (float)inputMouse->GetRStickLRPress() * 0.001f * 0.04f;
-		m_rot.z += (float)inputMouse->GetRStickUDPress() * 0.001f * 0.04f;
+		//m_rot.y += (float)inputMouse->GetRStickLRPress() * 0.001f * 0.04f;
+		//m_rot.z += (float)inputMouse->GetRStickUDPress() * 0.001f * 0.04f;
 	}
 
 	Rot();
