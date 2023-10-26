@@ -63,6 +63,7 @@ CPlayer::CPlayer(int nPriority = 3) : CObject(nPriority)
 	m_nShotTimer = 0;
 	m_state = STATE_NORMAL;
 	m_nCombo = 0;
+	m_nEnergy = 0;
 
 	for (int nCntModel = 0; nCntModel < 32; nCntModel++)
 	{
@@ -190,6 +191,7 @@ HRESULT CPlayer::Init(void)
 
 	SetType(TYPE_PLAYER);
 	SetCollider(CCollider::Create(&m_pos, &m_rot, D3DXVECTOR3(100.0f, 100.0f, 100.0f), D3DXVECTOR3(-100.0f, -5.0f, -100.0f)));
+	m_nEnergy = 10;
 
 	return S_OK;
 }
@@ -241,6 +243,8 @@ void CPlayer::Update(void)
 
 	if (m_state == STATE_KICK)
 	{
+		rot.x -= 2.0f;
+
 		if (m_pMotion->IsFinish())
 		{
 			move *= 0.0f;
@@ -253,39 +257,20 @@ void CPlayer::Update(void)
 	{
 		move.x += (0 - move.x) * 0.15f;
 		move.z += (0 - move.z) * 0.15f;
+
+		rot.x = 0.0f;
 	}
 
-	if (pos.x > 3530.0f)
+	if (pos.x > 11000.0f)
 	{
-		pos.x = 3530.0f;
+		pos.x = 11000.0f;
 	}
-	else if (pos.x < -3530.0f)
+	else if (pos.x < -11000.0f)
 	{
-		pos.x = -3530.0f;
+		pos.x = -11000.0f;
 	}
 
-	if (pos.x < 1020.0f && pos.x > -1020.0f)
-	{
-		if (pos.z > 3505.0f)
-		{
-			pos.z = 3505.0f;
-		}
-		else if (pos.z < -3530.0f)
-		{
-			pos.z = -3530.0f;
-		}
-	}
-	else
-	{
-		if (pos.z > 3530.0f)
-		{
-			pos.z = 3530.0f;
-		}
-		else if (pos.z < -3530.0f)
-		{
-			pos.z = -3530.0f;
-		}
-	}
+	
 
 	if (m_state == STATE_DAMAGE)
 	{
@@ -326,6 +311,7 @@ void CPlayer::Update(void)
 	if (pos.y <= 0.0f)
 	{
 		m_bAir = false;
+		m_nEnergy = 10;
 	}
 	else
 	{
@@ -339,6 +325,7 @@ void CPlayer::Update(void)
 	SetHeight(fHeight);
 	SetWidth(fWidth);
 
+	CBullet::color();
 	CManager::Get()->Get()->GetScene()->GetCamera()->SetPos(pos);
 
 	ControlMotion(move);
@@ -455,7 +442,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		m_pMotion->Set(MOTION_JUMP);
 	}
 
-	if (input->GetPress(DIK_H) == true || inputMouse->GetPress(0) == true)
+	if (input->GetPress(DIK_G) == true || inputMouse->GetPress(0) == true)
 	{//Hキーが押された時
 		D3DXVECTOR3 moveShot = { 0.0f,0.0f,0.0f };
 		moveShot.x = -sinf(m_rotDest.z);
@@ -468,7 +455,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 		if (m_state != STATE_KICK)
 		{
-			move->y = -1.0f;
+			move->y = 0.0f;
 		}
 
 		if (m_nShotTimer % 15 == 0 || m_nShotTimer == 0)
@@ -490,13 +477,22 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 									nNumLock++;
 
 									moveShot.y = (float)(rand() % 3 + 1);
-									//moveShot.z = (float)((rand() % 3) - 1) * 3;
 
 									posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
 									posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
 									posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 
-									CBullet::Create(posGun, moveShot * 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200);
+									CBullet::Create(posGun, moveShot * 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_NORMAL);
+
+									moveShot.y = (float)(rand() % 3 + 1) * 2;
+									moveShot.z = (float)((rand() % 3) + 2) * 2;
+
+									if (rand() % 2 == 0)
+									{
+										moveShot.z *= -1.0f;
+									}
+
+									CBullet::Create(posGun, moveShot * 30.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_EFFECT);
 
 									CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
 								}
@@ -512,7 +508,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
 				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 
-				CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1, -1, 16.0f, 16.0f, 200);
+				CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1, -1, 16.0f, 16.0f, 200, CBullet::TYPE_NORMAL);
 
 				CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
 			}
@@ -562,23 +558,6 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 		}
 	}
 
-	if (input->GetButtonTrigger(6) == true)
-	{
-		move->x = 0.0f;
-		move->y = 0.0f;
-
-		move->x = 50.0f * sinf(D3DX_PI + RotStick);
-		move->y = 50.0f * cosf(D3DX_PI + RotStick);
-
-		m_state = STATE_KICK;
-	}
-
-	if (input->GetButtonTrigger(2) == true && m_bAir == false)
-	{
-		move->y = 25.0f;
-		m_pMotion->Set(MOTION_JUMP);
-	}
-
 	if (input->GetButtonPress(7) == true)
 	{//Gキーが押された時
 		D3DXVECTOR3 moveShot = { 0.0f,0.0f,0.0f };
@@ -590,7 +569,7 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 		m_bShot = true;
 		int nNumLock = 0;
 
-		if (m_state != STATE_KICK)
+		if (m_state != STATE_KICK && move->y < 0.0f)
 		{
 			move->y = -1.0f;
 		}
@@ -614,13 +593,27 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 									nNumLock++;
 
 									moveShot.y = (float)(rand() % 3 + 1);
-									//moveShot.z = (float)((rand() % 3) - 1) * 3;
 
 									posGun.x = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._41;
 									posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
 									posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 
-									CBullet::Create(posGun, moveShot * 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200);
+									CBullet::Create(posGun, moveShot * 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_NORMAL);
+
+									moveShot.y = (float)(rand() % 10);
+									moveShot.z = (float)(rand() % 10);
+
+									if (rand() % 2 == 0)
+									{
+										moveShot.z *= -1.0f;
+									}
+
+									if (rand() % 2 == 0)
+									{
+										moveShot.y *= -1.0f;
+									}
+
+									CBullet::Create(posGun, moveShot * 30.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_EFFECT);
 
 									CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
 								}
@@ -636,7 +629,7 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 				posGun.y = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._42;
 				posGun.z = CManager::Get()->Get()->GetScene()->GetPlayer()->GetModel(16)->GetMtxWorld()._43;
 
-				CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1, -1, 16.0f, 16.0f, 200);
+				CBullet::Create(posGun, moveShot * 20.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), -1, -1, 16.0f, 16.0f, 200, CBullet::TYPE_NORMAL);
 
 				CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
 			}
@@ -653,6 +646,25 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 		{
 			m_nShotTimer++;
 		}
+	}
+
+	if (input->GetButtonTrigger(6) == true && m_nEnergy > 0)
+	{
+		move->x = 0.0f;
+		move->y = 0.0f;
+
+		move->x = 30.0f * sinf(D3DX_PI + RotStick);
+		move->y = 30.0f * cosf(D3DX_PI + RotStick);
+
+		m_nEnergy--;
+
+		m_state = STATE_KICK;
+	}
+
+	if (input->GetButtonTrigger(2) == true && m_bAir == false)
+	{
+		move->y = 25.0f;
+		m_pMotion->Set(MOTION_JUMP);
 	}
 }
 
@@ -763,9 +775,6 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 							{
 								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
 
-								move->x *= 1.1f;
-								move->y *= 1.1f;
-
 								pos->z = 0.0f;
 								move->z = 0.0f;
 
@@ -773,7 +782,8 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
 
-								m_pMotion->Set(MOTION_KICK);
+								m_nEnergy = 10;
+								m_pMotion->ResetFrame();
 
 								pEnemy->SetLockon();
 							}

@@ -24,11 +24,11 @@
 LPDIRECT3DTEXTURE9 CSky::m_pTexture[MAX_SKY] = {};
 const char *CSky::m_apFilename[MAX_SKY] =
 {
-	"data\\TEXTURE\\sky001.png",
-	"data\\TEXTURE\\sky001.png",
-	"data\\TEXTURE\\sky001.png",
-	"data\\TEXTURE\\sky001.png",
-	"data\\TEXTURE\\sky002.png"
+	"data\\TEXTURE\\sky003.png",
+	"data\\TEXTURE\\sky003.png",
+	"data\\TEXTURE\\sky003.png",
+	"data\\TEXTURE\\sky003.png",
+	"data\\TEXTURE\\sky003.png"
 };
 
 //=====================================

@@ -186,7 +186,7 @@ CEnemySpawn *CEnemySpawn::Create(int nWave, int nEnemySpaen)
 			{
 				if (nWave == 0)
 				{
-					pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(300.0f * nCnt + 1.0f, 100.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
+					pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(300.0f * nCnt + 4000.0f, 400.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
 					pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
 				}
 				else

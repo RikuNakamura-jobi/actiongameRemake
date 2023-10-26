@@ -147,7 +147,7 @@ void CTitle::Update(void)
 
 	if (GetbFade() == true)
 	{
-		CManager::Get()->SetMode(CScene::MODE_TUTORIAL);
+		CManager::Get()->SetMode(CScene::MODE_GAME);
 		SetbFade(false);
 	}
 
@@ -299,9 +299,9 @@ HRESULT CGame::Init(void)
 {
 	m_pScore = CScore::Create(D3DXVECTOR3(1200.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
 	m_pTime = CTime::Create(D3DXVECTOR3(600.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
-	m_pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(3600.0f, 0.0f, 3600.0f));
+	m_pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(20000.0f, 0.0f, 20000.0f));
 	m_pSky = CSky::Create();
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(3000.0f, 0.1f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CPlayer::TYPE_NORMAL);
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(10000.0f, 0.1f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CPlayer::TYPE_NORMAL);
 
 	CBg::Create(CBg::TEXTURE_TUTORIAL_GAME);
 

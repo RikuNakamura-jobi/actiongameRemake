@@ -129,6 +129,7 @@ private:			//外部からアクセス不可能
 	int m_nEasterTimer;
 	int m_nShotTimer;
 	int m_nCombo;
+	int m_nEnergy;
 
 	//静的メンバ変数 
 	static int m_nNumModel;

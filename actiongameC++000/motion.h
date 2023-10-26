@@ -58,6 +58,8 @@ public:				//外部からアクセス可能
 	int GetType(void) { return m_nType; }
 	bool IsFinish(void) { return m_bFinish; }
 
+	void ResetFrame(void) { m_nNumCounter = 0; }
+
 protected:			//子ならアクセス可能(使わない)
 
 private:			//外部からアクセス不可能

@@ -68,7 +68,7 @@ HRESULT CField::Load(void)
 
 	//テクスチャの読み込み
 	if (FAILED(D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\field000.png",
+		"data\\TEXTURE\\field001.png",
 		&m_pTexture)))
 	{
 		return E_FAIL;

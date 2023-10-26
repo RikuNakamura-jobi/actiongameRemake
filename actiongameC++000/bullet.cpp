@@ -32,6 +32,7 @@
 
 //静的メンバ変数宣言-------------------
 CObjectX::MODELX CBullet::m_model = {};
+D3DXCOLOR CBullet::m_colorOrbit = D3DXCOLOR(0.7f, 0.3f, 0.9f, 1.0f);
 
 //=====================================
 // コンストラクタ・デストラクタ
@@ -42,6 +43,7 @@ CBullet::CBullet(int nPriority = 5) : CObjectX(nPriority)
 	m_nLife = 0;
 	m_pow = 0.3f;
 	m_orbit = NULL;
+	m_type = TYPE_NORMAL;
 }
 
 CBullet::~CBullet()
@@ -51,7 +53,7 @@ CBullet::~CBullet()
 //=====================================
 // 生成処理
 //=====================================
-CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int nWave, int nSpawn, float fWidth, float fHeight, int nLife)
+CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int nWave, int nSpawn, float fWidth, float fHeight, int nLife, TYPE type)
 {
 	CBullet *pObjectBullet;
 
@@ -67,6 +69,7 @@ CBullet *CBullet::Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int
 
 		pObjectBullet->m_nWave = nWave;
 		pObjectBullet->m_nSpawn = nSpawn;
+		pObjectBullet->m_type = type;
 
 		//初期化
 		if (FAILED(pObjectBullet->Init()))
@@ -222,11 +225,18 @@ HRESULT CBullet::Init(void)
 
 	if (m_nWave != -1 && m_nSpawn != -1)
 	{
-		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 6.0f, 0.0f), D3DXVECTOR3(0.0f, -6.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15);
+		if (m_type == TYPE_EFFECT)
+		{
+			m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 6.0f, 0.0f), D3DXVECTOR3(0.0f, -6.0f, 0.0f), m_colorOrbit, 15);
+		}
+		else
+		{
+			m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_colorOrbit, 3);
+		}
 	}
 	else
 	{
-		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR3(0.0f, -1.0f, 0.0f), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 15);
+		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR3(0.0f, -1.0f, 0.0f), m_colorOrbit, 15);
 	}
 
 	SetType(TYPE_BULLET);
@@ -271,37 +281,102 @@ void CBullet::Update(void)
 						float length = D3DXVec3Length(&move);
 						float epos = pEnemy->GetPos().x;
 
-						if (m_nLife < 195)
+						if (m_nLife < 198)
 						{
 							m_pow = 1.0f;
 						}
 
-						fRotMove = atan2f(move.x, move.z);
-						fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().y - pos.y);
-						fRotDiff = fRotDest - fRotMove;
-
-						if (fRotDiff > D3DX_PI)
+						if (m_type == TYPE_EFFECT)
 						{
-							fRotDiff -= (D3DX_PI * 2);
-						}
-						else if (fRotDiff < -D3DX_PI)
-						{
-							fRotDiff += (D3DX_PI * 2);
-						}
+							if (m_nLife < 198)
+							{
+								m_nLife -= 4;
+							}
 
-						fRotMove += fRotDiff * m_pow;
+							fRotMove = atan2f(move.x, move.z);
+							fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().z - pos.z);
+							fRotDiff = fRotDest - fRotMove;
 
-						if (fRotMove > D3DX_PI)
-						{
-							fRotMove -= (D3DX_PI * 2);
-						}
-						else if (fRotMove < -D3DX_PI)
-						{
-							fRotMove += (D3DX_PI * 2);
-						}
+							if (fRotDiff > D3DX_PI)
+							{
+								fRotDiff -= (D3DX_PI * 2);
+							}
+							else if (fRotDiff < -D3DX_PI)
+							{
+								fRotDiff += (D3DX_PI * 2);
+							}
 
-						move.x = sinf(fRotMove) * length;
-						move.y = cosf(fRotMove) * length;
+							fRotMove += fRotDiff * m_pow;
+
+							if (fRotMove > D3DX_PI)
+							{
+								fRotMove -= (D3DX_PI * 2);
+							}
+							else if (fRotMove < -D3DX_PI)
+							{
+								fRotMove += (D3DX_PI * 2);
+							}
+
+							move.x = sinf(fRotMove) * length;
+							move.z = cosf(fRotMove) * length;
+
+							fRotMove = atan2f(move.x, move.z);
+							fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().y - pos.y);
+							fRotDiff = fRotDest - fRotMove;
+
+							if (fRotDiff > D3DX_PI)
+							{
+								fRotDiff -= (D3DX_PI * 2);
+							}
+							else if (fRotDiff < -D3DX_PI)
+							{
+								fRotDiff += (D3DX_PI * 2);
+							}
+
+							fRotMove += fRotDiff * m_pow;
+
+							if (fRotMove > D3DX_PI)
+							{
+								fRotMove -= (D3DX_PI * 2);
+							}
+							else if (fRotMove < -D3DX_PI)
+							{
+								fRotMove += (D3DX_PI * 2);
+							}
+
+							move.y = cosf(fRotMove) * length;
+						}
+						else
+						{
+							fRotMove = atan2f(move.x, move.y);
+							fRotDest = atan2f(pEnemy->GetLockon()->GetPos().x - pos.x, pEnemy->GetLockon()->GetPos().y - pos.y);
+							fRotDiff = fRotDest - fRotMove;
+
+							if (fRotDiff > D3DX_PI)
+							{
+								fRotDiff -= (D3DX_PI * 2);
+							}
+							else if (fRotDiff < -D3DX_PI)
+							{
+								fRotDiff += (D3DX_PI * 2);
+							}
+
+							fRotMove += fRotDiff * m_pow;
+
+							if (fRotMove > D3DX_PI)
+							{
+								fRotMove -= (D3DX_PI * 2);
+							}
+							else if (fRotMove < -D3DX_PI)
+							{
+								fRotMove += (D3DX_PI * 2);
+							}
+
+							move.x = sinf(fRotMove) * length;
+							move.y = cosf(fRotMove) * length;
+							move.z = 0.0f;
+							pos.z = 0.0f;
+						}
 					}
 				}
 			}
@@ -380,7 +455,7 @@ bool CBullet::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move
 
 				if (pEnemy != NULL)
 				{
-					if (pEnemy->GetLockon() != NULL)
+					if (pEnemy->GetLockon() != NULL && m_type != TYPE::TYPE_EFFECT)
 					{
 						if (pEnemy->GetCollider()->CollisionSquareTrigger(*pos) == true)
 						{
@@ -418,7 +493,7 @@ bool CBullet::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move
 			{
 				CObject *pObjNext = pObj->GetObjectNext();
 
-				TYPE type;
+				CObject::TYPE type;
 
 				//種類取得
 				type = pObj->GetType();
@@ -519,4 +594,168 @@ void CBullet::Reflect(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		move->x = sinf(rot->z) * hypotf(move->x, move->y);
 		move->y = cosf(rot->z) * hypotf(move->x, move->y);
 	}
+}
+
+void CBullet::color(void)
+{
+	CInput *input = CManager::Get()->Get()->GetInputKeyboard();
+
+	if (input->GetPress(DIK_LSHIFT) == true)
+	{
+		if (input->GetPress(DIK_Y) == true)
+		{//Aキーが押された時
+			m_colorOrbit.r += 0.01f;
+
+			if (m_colorOrbit.r > 1.0f)
+			{
+				m_colorOrbit.r = 1.0f;
+			}
+		}
+		if (input->GetPress(DIK_H) == true)
+		{//Aキーが押された時
+			m_colorOrbit.r -= 0.01f;
+
+			if (m_colorOrbit.r < 0.0f)
+			{
+				m_colorOrbit.r = 0.0f;
+			}
+		}
+
+		if (input->GetPress(DIK_U) == true)
+		{//Aキーが押された時
+			m_colorOrbit.g += 0.01f;
+
+			if (m_colorOrbit.g > 1.0f)
+			{
+				m_colorOrbit.g = 1.0f;
+			}
+		}
+		if (input->GetPress(DIK_J) == true)
+		{//Aキーが押された時
+			m_colorOrbit.g -= 0.01f;
+
+			if (m_colorOrbit.g < 0.0f)
+			{
+				m_colorOrbit.g = 0.0f;
+			}
+		}
+
+		if (input->GetPress(DIK_I) == true)
+		{//Aキーが押された時
+			m_colorOrbit.b += 0.01f;
+
+			if (m_colorOrbit.b > 1.0f)
+			{
+				m_colorOrbit.b = 1.0f;
+			}
+		}
+		if (input->GetPress(DIK_K) == true)
+		{//Aキーが押された時
+			m_colorOrbit.b -= 0.01f;
+
+			if (m_colorOrbit.b < 0.0f)
+			{
+				m_colorOrbit.b = 0.0f;
+			}
+		}
+
+		if (input->GetPress(DIK_O) == true)
+		{//Aキーが押された時
+			m_colorOrbit.a += 0.01f;
+
+			if (m_colorOrbit.a > 1.0f)
+			{
+				m_colorOrbit.a = 1.0f;
+			}
+		}
+		if (input->GetPress(DIK_L) == true)
+		{//Aキーが押された時
+			m_colorOrbit.a -= 0.01f;
+
+			if (m_colorOrbit.a < 0.0f)
+			{
+				m_colorOrbit.a = 0.0f;
+			}
+		}
+	}
+	else
+	{
+		if (input->GetTrigger(DIK_Y) == true)
+		{//Aキーが押された時
+			m_colorOrbit.r += 0.01f;
+
+			if (m_colorOrbit.r > 1.0f)
+			{
+				m_colorOrbit.r = 1.0f;
+			}
+		}
+		if (input->GetTrigger(DIK_H) == true)
+		{//Aキーが押された時
+			m_colorOrbit.r -= 0.01f;
+
+			if (m_colorOrbit.r < 0.0f)
+			{
+				m_colorOrbit.r = 0.0f;
+			}
+		}
+
+		if (input->GetTrigger(DIK_U) == true)
+		{//Aキーが押された時
+			m_colorOrbit.g += 0.01f;
+
+			if (m_colorOrbit.g > 1.0f)
+			{
+				m_colorOrbit.g = 1.0f;
+			}
+		}
+		if (input->GetTrigger(DIK_J) == true)
+		{//Aキーが押された時
+			m_colorOrbit.g -= 0.01f;
+
+			if (m_colorOrbit.g < 0.0f)
+			{
+				m_colorOrbit.g = 0.0f;
+			}
+		}
+
+		if (input->GetTrigger(DIK_I) == true)
+		{//Aキーが押された時
+			m_colorOrbit.b += 0.01f;
+
+			if (m_colorOrbit.b > 1.0f)
+			{
+				m_colorOrbit.b = 1.0f;
+			}
+		}
+		if (input->GetTrigger(DIK_K) == true)
+		{//Aキーが押された時
+			m_colorOrbit.b -= 0.01f;
+
+			if (m_colorOrbit.b < 0.0f)
+			{
+				m_colorOrbit.b = 0.0f;
+			}
+		}
+
+		if (input->GetTrigger(DIK_O) == true)
+		{//Aキーが押された時
+			m_colorOrbit.a += 0.01f;
+
+			if (m_colorOrbit.a > 1.0f)
+			{
+				m_colorOrbit.a = 1.0f;
+			}
+		}
+		if (input->GetTrigger(DIK_L) == true)
+		{//Aキーが押された時
+			m_colorOrbit.a -= 0.01f;
+
+			if (m_colorOrbit.a < 0.0f)
+			{
+				m_colorOrbit.a = 0.0f;
+			}
+		}
+	}
+
+	CManager::Get()->GetDebugProc()->Print("弾の軌跡の色: %f %f %f %f\n", m_colorOrbit.r, m_colorOrbit.g, m_colorOrbit.b, m_colorOrbit.a);
 }

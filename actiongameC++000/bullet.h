@@ -21,6 +21,13 @@ class CBullet : public CObjectX
 {
 public:				//外部からアクセス可能
 
+	typedef enum
+	{
+		TYPE_NORMAL = 0,		//通常
+		TYPE_EFFECT,
+		TYPE_MAX
+	}TYPE;
+
 	//コンストラクタ・デストラクタ
 	CBullet(int nPriority);				//デフォルト
 	~CBullet();
@@ -35,10 +42,12 @@ public:				//外部からアクセス可能
 	MODELX *GetModel(void) { return &m_modelTemp; }
 
 	//静的メンバ関数
-	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int nWave, int nSpawn, float fWidth, float fHeight, int nLife);
+	static CBullet *Create(D3DXVECTOR3 pos, D3DXVECTOR3 move, D3DXVECTOR3 rot, int nWave, int nSpawn, float fWidth, float fHeight, int nLife, TYPE type);
 
 	static HRESULT Load(void);
 	static void Unload(void);
+
+	static void color(void);
 
 protected:			//子ならアクセス可能(使わない)
 
@@ -55,9 +64,11 @@ private:			//外部からアクセス不可能
 	float m_pow;
 	MODELX m_modelTemp;
 	COrbit *m_orbit;
+	TYPE m_type;
 
 	//静的メンバ変数
 	static MODELX m_model;
+	static D3DXCOLOR m_colorOrbit;
 
 };
 
