@@ -21,6 +21,7 @@
 #include "field.h"
 #include "scene.h"
 #include "particle.h"
+#include "baselife.h"
 #include "collision.h"
 #include "enemy.h"
 #include "enemymanager.h"
@@ -270,8 +271,6 @@ void CPlayer::Update(void)
 		pos.x = -11000.0f;
 	}
 
-	
-
 	if (m_state == STATE_DAMAGE)
 	{
 		m_nEasterTimer++;
@@ -296,9 +295,18 @@ void CPlayer::Update(void)
 		move.y -= 1.0f;
 	}
 
+	if (pos.y <= 0.0f)
+	{
+		m_bAir = false;
+	}
+	else
+	{
+		m_bAir = true;
+	}
+
 	if (m_state != STATE_HIT)
 	{
-		Collision(&pos, &move);
+		Collision(&pos, &posOld, &move);
 	}
 
 	if (CManager::Get()->Get()->GetScene()->GetField() != NULL)
@@ -306,17 +314,12 @@ void CPlayer::Update(void)
 		pos.y = CManager::Get()->Get()->GetScene()->GetField()->GetColHeight(pos, posOld, &move);
 	}
 
-	CManager::Get()->Get()->GetDebugProc()->Print("プレイヤーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
-
-	if (pos.y <= 0.0f)
+	if (m_bAir == false)
 	{
-		m_bAir = false;
 		m_nEnergy = 10;
 	}
-	else
-	{
-		m_bAir = true;
-	}
+
+	CManager::Get()->Get()->GetDebugProc()->Print("プレイヤーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
 
 	SetRot(&rot);
 	SetPos(pos);
@@ -404,45 +407,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		m_rotMove.z = D3DX_PI * 0.5f;
 	}
 
-	if (input->GetTrigger(DIK_RSHIFT) == true || inputMouse->GetTrigger(1) == true)
-	{
-		move->x = 0.0f;
-		move->y = 0.0f;
-
-		if (input->GetPress(DIK_A) == true)
-		{//Aキーが押された時
-			move->x = 50.0f;
-		}
-		else if (input->GetPress(DIK_D) == true)
-		{//Dキーが押された時
-			move->x = -50.0f;
-		}
-
-		if (input->GetPress(DIK_W) == true)
-		{//Aキーが押された時
-			move->y = 50.0f;
-		}
-		else if (input->GetPress(DIK_S) == true)
-		{//Dキーが押された時
-			move->y = -50.0f;
-		}
-
-		if (move->x == 0.0f && move->y == 0.0f)
-		{
-			move->x = -50.0f;
-			move->y = -50.0f;
-		}
-
-		m_state = STATE_KICK;
-	}
-
-	if (input->GetTrigger(DIK_SPACE) == true && m_bAir == false)
-	{
-		move->y = 20.0f;
-		m_pMotion->Set(MOTION_JUMP);
-	}
-
-	if (input->GetPress(DIK_G) == true || inputMouse->GetPress(0) == true)
+	if (input->GetPress(DIK_RETURN) == true || inputMouse->GetPress(0) == true)
 	{//Hキーが押された時
 		D3DXVECTOR3 moveShot = { 0.0f,0.0f,0.0f };
 		moveShot.x = -sinf(m_rotDest.z);
@@ -453,9 +418,9 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		m_bShot = true;
 		int nNumLock = 0;
 
-		if (m_state != STATE_KICK)
+		if (m_state != STATE_KICK && move->y < 0.0f)
 		{
-			move->y = 0.0f;
+			move->y = -1.0f;
 		}
 
 		if (m_nShotTimer % 15 == 0 || m_nShotTimer == 0)
@@ -484,12 +449,17 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 									CBullet::Create(posGun, moveShot * 10.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_NORMAL);
 
-									moveShot.y = (float)(rand() % 3 + 1) * 2;
-									moveShot.z = (float)((rand() % 3) + 2) * 2;
+									moveShot.y = (float)(rand() % 10);
+									moveShot.z = (float)(rand() % 10);
 
 									if (rand() % 2 == 0)
 									{
 										moveShot.z *= -1.0f;
+									}
+
+									if (rand() % 2 == 0)
+									{
+										moveShot.y *= -1.0f;
 									}
 
 									CBullet::Create(posGun, moveShot * 30.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_EFFECT);
@@ -525,6 +495,44 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		{
 			m_nShotTimer++;
 		}
+	}
+
+	if (input->GetTrigger(DIK_RSHIFT) == true || inputMouse->GetTrigger(1) == true)
+	{
+		move->x = 0.0f;
+		move->y = 0.0f;
+
+		if (input->GetPress(DIK_A) == true)
+		{//Aキーが押された時
+			move->x = 20.0f;
+		}
+		else if (input->GetPress(DIK_D) == true)
+		{//Dキーが押された時
+			move->x = -20.0f;
+		}
+
+		if (input->GetPress(DIK_W) == true)
+		{//Aキーが押された時
+			move->y = 20.0f;
+		}
+		else if (input->GetPress(DIK_S) == true)
+		{//Dキーが押された時
+			move->y = -20.0f;
+		}
+
+		if (move->x == 0.0f && move->y == 0.0f)
+		{
+			move->x = -20.0f;
+			move->y = -20.0f;
+		}
+
+		m_state = STATE_KICK;
+	}
+
+	if (input->GetTrigger(DIK_SPACE) == true && m_bAir == false)
+	{
+		move->y = 18.0f;
+		m_pMotion->Set(MOTION_JUMP);
 	}
 }
 
@@ -653,8 +661,8 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 		move->x = 0.0f;
 		move->y = 0.0f;
 
-		move->x = 30.0f * sinf(D3DX_PI + RotStick);
-		move->y = 30.0f * cosf(D3DX_PI + RotStick);
+		move->x = 20.0f * sinf(D3DX_PI + RotStick);
+		move->y = 20.0f * cosf(D3DX_PI + RotStick);
 
 		m_nEnergy--;
 
@@ -663,7 +671,7 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 
 	if (input->GetButtonTrigger(2) == true && m_bAir == false)
 	{
-		move->y = 25.0f;
+		move->y = 18.0f;
 		m_pMotion->Set(MOTION_JUMP);
 	}
 }
@@ -755,7 +763,7 @@ void CPlayer::SetRot(D3DXVECTOR3 *rot)
 //=====================================
 // プレイヤーの当たり判定処理
 //=====================================
-bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
+bool CPlayer::Collision(D3DXVECTOR3 *pos,D3DXVECTOR3 *posOld, D3DXVECTOR3 *move)
 {
 	if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
 	{
@@ -810,6 +818,43 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move)
 					}
 				}
 			}
+		}
+	}
+
+	for (int nCntPri = 0; nCntPri < ALL_PRIORITY; nCntPri++)
+	{
+		CObject *pObj;
+
+		pObj = GetObjectTop(nCntPri);
+
+		while (pObj != NULL)
+		{
+			CObject *pObjNext = pObj->GetObjectNext();
+
+			CObject::TYPE type;
+
+			//種類取得
+			type = pObj->GetType();
+
+			if (type == TYPE_NONE)
+			{
+				if (pObj->GetCollider() != NULL)
+				{
+					if (pObj->GetCollider()->CollisionSquare(pos, *posOld, move) == true)
+					{
+						if (pObj->GetPos().y + pObj->GetHeight() <= pos->y && pObj->GetRot().z == 0.0f)
+						{
+							move->y = 0.0f;
+							*pos += *move;
+							m_bAir = false;
+						}
+
+						//return true;
+					}
+				}
+			}
+
+			pObj = pObjNext;
 		}
 	}
 

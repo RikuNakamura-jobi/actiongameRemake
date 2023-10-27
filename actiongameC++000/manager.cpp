@@ -29,6 +29,8 @@
 #include "fade.h"
 #include "field.h"
 #include "sky.h"
+#include "block.h"
+#include "baselife.h"
 #include "collision.h"
 
 //É}ÉNÉçíËã`---------------------------
@@ -303,6 +305,8 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	CField::Load();
 	CSky::Load();
 	CPlayer::Load();
+	CBlock::Load();
+	CBaselife::Load();
 
 	if (m_pScene != NULL)
 	{
@@ -344,6 +348,8 @@ void CManager::Uninit(void)
 	CField::Unload();
 	CSky::Unload();
 	CPlayer::Unload();
+	CBlock::Unload();
+	CBaselife::Unload();
 
 	CObject::ReleaseAll();
 

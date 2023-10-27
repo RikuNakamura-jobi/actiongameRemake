@@ -86,6 +86,8 @@ public:				//外部からアクセス可能
 	void SetSaveType(TYPE save) { m_Type = save; }
 	TYPE GetSaveType(void) { return m_Type; }
 
+	int GetEnegy(void) { return m_nEnergy; }
+
 	CModel *GetModel(int nIdx) { return m_apModel[nIdx]; }
 
 	void SetSave(CPlayer *pPlayerSave);
@@ -101,7 +103,7 @@ protected:			//子ならアクセス可能(使わない)
 private:			//外部からアクセス不可能
 
 	//メンバ関数
-	bool Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *move);
+	bool Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move);
 	void SetRot(D3DXVECTOR3 *rot);
 	void Easter(void);
 	void Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D3DXVECTOR3 *move, float *fHeight, float *fWidth);

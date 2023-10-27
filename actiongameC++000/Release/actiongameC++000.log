@@ -1,5 +1,7 @@
-﻿  bg.cpp
+﻿  baselife.cpp
+  bg.cpp
   bgmulti.cpp
+  block.cpp
   bullet.cpp
   camera.cpp
   collision.cpp
@@ -16,13 +18,13 @@
   manager.cpp
   model.cpp
   motion.cpp
+  コンパイル中...
   number.cpp
   object.cpp
-  コンパイル中...
   object2D.cpp
   object3D.cpp
-  objectX.cpp
   objectbillboard.cpp
+  objectX.cpp
   orbit.cpp
   particle.cpp
   player.cpp
@@ -33,9 +35,9 @@
   texture.cpp
   time.cpp
   コード生成しています。
-  43 of 683 functions ( 6.3%) were compiled, the rest were copied from previous compilation.
-    4 functions were new in current compilation
-    61 functions had inline decision re-evaluated but remain unchanged
+  141 of 720 functions (19.6%) were compiled, the rest were copied from previous compilation.
+    34 functions were new in current compilation
+    122 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
   actiongameC++000.vcxproj -> C:\個人\github\actiongameRemake\actiongameC++000\actiongameC++000.exe
   actiongameC++000.vcxproj -> C:\個人\github\actiongameRemake\actiongameC++000\actiongameC++000.pdb (Full PDB)

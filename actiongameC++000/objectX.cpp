@@ -147,4 +147,6 @@ void CObjectX::Set(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWidth, float fHeight
 {
 	m_pos = pos;
 	m_rot = rot;
+	m_fHeight = fHeight;
+	m_fWidth = fWidth;
 }

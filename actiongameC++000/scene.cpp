@@ -18,6 +18,8 @@
 #include "time.h"
 #include "field.h"
 #include "sky.h"
+#include "block.h"
+#include "baselife.h"
 #include "sound.h"
 #include "enemymanager.h"
 
@@ -301,7 +303,18 @@ HRESULT CGame::Init(void)
 	m_pTime = CTime::Create(D3DXVECTOR3(600.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
 	m_pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(20000.0f, 0.0f, 20000.0f));
 	m_pSky = CSky::Create();
-	m_pPlayer = CPlayer::Create(D3DXVECTOR3(10000.0f, 0.1f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CPlayer::TYPE_NORMAL);
+	m_pPlayer = CPlayer::Create(D3DXVECTOR3(10600.0f, 0.1f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CPlayer::TYPE_NORMAL);
+	m_pBaselife = CBaselife::Create();
+
+	for (int nCnt = 0; nCnt < 20; nCnt++)
+	{
+		CBlock::Create(D3DXVECTOR3(10900.0f, 190.0f * nCnt + 90.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
+	}
+
+	for (int nCnt = 0; nCnt < 3; nCnt++)
+	{
+		CBlock::Create(D3DXVECTOR3(190.0f * nCnt + 9000.0f, -10.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
+	}
 
 	CBg::Create(CBg::TEXTURE_TUTORIAL_GAME);
 

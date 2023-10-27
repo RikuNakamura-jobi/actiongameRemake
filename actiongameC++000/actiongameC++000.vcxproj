@@ -152,8 +152,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="baselife.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="bgmulti.cpp" />
+    <ClCompile Include="block.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collision.cpp" />
@@ -188,8 +190,10 @@
     <ClCompile Include="time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="baselife.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="bgmulti.h" />
+    <ClInclude Include="block.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collision.h" />

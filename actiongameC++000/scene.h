@@ -25,6 +25,7 @@ class CTime;
 class CField;
 class CEnemyManager;
 class CSky;
+class CBaselife;
 class CScene
 {
 public:				//外部からアクセス可能
@@ -66,6 +67,8 @@ public:				//外部からアクセス可能
 	virtual CScore *GetScore(void) { return NULL; }
 
 	virtual CEnemyManager *GetEnemyManager(void) { return NULL; }
+
+	virtual CBaselife *GetBaseLife(void) { return NULL; }
 
 	virtual void SetFinish(void) { return; }
 
@@ -163,7 +166,6 @@ private:			//外部からアクセス不可能
 	CField *m_pField;
 	CCamera *m_pCamera;
 	CSky *m_pSky;
-
 	bool m_bFinish;
 	
 	//静的メンバ変数
@@ -200,6 +202,8 @@ public:				//外部からアクセス可能
 
 	CSky *GetSky(void) { return m_pSky; }
 
+	CBaselife *GetBaseLife(void) { return m_pBaselife; }
+
 	void SetFinish(void) { m_bFinish = true; }
 
 	//静的メンバ関数
@@ -219,6 +223,7 @@ private:			//外部からアクセス不可能
 	CTime *m_pTime;
 	CEnemyManager *m_pEnemyManager;
 	CSky *m_pSky;
+	CBaselife *m_pBaselife;
 
 	bool m_bFinish;
 

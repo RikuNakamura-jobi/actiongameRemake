@@ -290,7 +290,15 @@ bool CCollider::CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld
 
 				vecMoveRef = vecMove + (vecNorPlaneCenter * fDot * 1.0001f);
 				D3DXVec3Normalize(&vecMoveRef, &vecMoveRef);
-				vecMoveRef *= D3DXVec3Length(&vecMove);
+
+				if (m_rot->z == 0.0f)
+				{
+					vecMoveRef *= D3DXVec3Length(&vecMove) * 0.01f;
+				}
+				else
+				{
+					vecMoveRef *= D3DXVec3Length(&vecMove);
+				}
 
 				*posTarget = vecIntersect + vecMoveRef;
 
