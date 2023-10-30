@@ -27,6 +27,9 @@ public:
 		SOUND_LABEL_SE_SCORE,			// ’e”­ŽË‰¹1
 		SOUND_LABEL_SE_YES,				// ’e”­ŽË‰¹1
 		SOUND_LABEL_SE_DAMAGE,			// ’e”­ŽË‰¹1
+		SOUND_LABEL_SE_HIT,				// ’e”­ŽË‰¹1
+		SOUND_LABEL_SE_DASH,			// ’e”­ŽË‰¹1
+		SOUND_LABEL_SE_THUNDER,			// ’e”­ŽË‰¹1
 		SOUND_LABEL_MAX,
 	} SOUND_LABEL;
 

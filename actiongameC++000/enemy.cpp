@@ -11,6 +11,7 @@
 #include "bullet.h"
 #include "scene.h"
 #include "lockon.h"
+#include "score.h"
 #include "collision.h"
 #include "enemymanager.h"
 #include "objectX.h"
@@ -200,6 +201,7 @@ HRESULT CEnemy::Init(void)
 	{
 		SetCollider(CCollider::Create(GetPosPointa(), GetRotPointa(), D3DXVECTOR3(120.0f, 90.0f, 120.0f), D3DXVECTOR3(-120.0f, -90.0f, -120.0f)));
 		GetCollider()->SetType(CCollider::TYPE_BOX);
+		m_nLife = 20;
 	}
 	else
 	{
@@ -215,13 +217,19 @@ HRESULT CEnemy::Init(void)
 //=====================================
 void CEnemy::Uninit(void)
 {
-	CManager::Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->addNumEnemy(-1);
-	CManager::Get()->GetScene()->GetEnemyManager()->GetEnemyWave(m_nWave)->SetEnemy(m_nIdxSpawn, NULL);
+	CManager::Get()->GetScene()->GetEnemyManager()->GetEnemyWave(0)->addNumEnemy(-1);
+	CManager::Get()->GetScene()->GetEnemyManager()->GetEnemyWave(0)->SetEnemy(m_nIdxSpawn, NULL);
 
 	if (m_lockon != NULL)
 	{
 		m_lockon->Uninit();
 		m_lockon = NULL;
+	}
+
+	if (m_nWave == 1)
+	{
+		CManager::Get()->GetScene()->SetFinish();
+		CManager::Get()->GetScene()->GetScore()->AddScore(1500);
 	}
 	
 	CObjectX::Uninit();

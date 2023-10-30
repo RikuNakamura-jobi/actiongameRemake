@@ -255,7 +255,7 @@ private:			//外部からアクセス不可能
 
 	//メンバ変数
 	CBg *m_pBg;
-	CScore *m_pScore;
+	CScore *m_pScore[6];
 
 	//静的メンバ変数
 

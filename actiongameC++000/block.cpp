@@ -189,7 +189,7 @@ HRESULT CBlock::Init(void)
 {
 	CObjectX::Init();
 
-	SetType(TYPE_NONE);
+	SetType(TYPE_BLOCK);
 
 	SetCollider(CCollider::Create(GetPosPointa(), GetRotPointa(), D3DXVECTOR3(100.0f, 100.0f, 100.0f), D3DXVECTOR3(-100.0f, -100.0f, -100.0f)));
 	GetCollider()->SetType(CCollider::TYPE_BOX);

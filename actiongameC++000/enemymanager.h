@@ -11,7 +11,7 @@
 #include "object.h"
 
 //マクロ定義---------------------------
-#define MAX_ENEMY_WAVE (3)			//多重スクロール用背景の最大数
+#define MAX_ENEMY_WAVE (1)			//多重スクロール用背景の最大数
 #define MAX_ENEMY_SPAWN (36)			//多重スクロール用背景の最大数
 
 //列挙型定義---------------------------
@@ -50,6 +50,7 @@ private:			//外部からアクセス不可能
 	//メンバ変数
 	CEnemy *m_apObject2D[MAX_ENEMY_SPAWN];
 	int m_nNumEnemy;
+	int m_nWave;
 
 	//静的メンバ変数
 

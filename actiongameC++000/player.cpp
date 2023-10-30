@@ -47,7 +47,7 @@ CMotion *CPlayer::m_pMotionSave = NULL;
 //=====================================
 // コンストラクタ・デストラクタ
 //=====================================
-CPlayer::CPlayer(int nPriority = 3) : CObject(nPriority)
+CPlayer::CPlayer(int nPriority = 4) : CObject(nPriority)
 {
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_posOld = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -193,6 +193,7 @@ HRESULT CPlayer::Init(void)
 	SetType(TYPE_PLAYER);
 	SetCollider(CCollider::Create(&m_pos, &m_rot, D3DXVECTOR3(100.0f, 100.0f, 100.0f), D3DXVECTOR3(-100.0f, -5.0f, -100.0f)));
 	m_nEnergy = 10;
+	m_rotDest.z = 1.57f;
 
 	return S_OK;
 }
@@ -262,15 +263,6 @@ void CPlayer::Update(void)
 		rot.x = 0.0f;
 	}
 
-	if (pos.x > 11000.0f)
-	{
-		pos.x = 11000.0f;
-	}
-	else if (pos.x < -11000.0f)
-	{
-		pos.x = -11000.0f;
-	}
-
 	if (m_state == STATE_DAMAGE)
 	{
 		m_nEasterTimer++;
@@ -307,6 +299,15 @@ void CPlayer::Update(void)
 	if (m_state != STATE_HIT)
 	{
 		Collision(&pos, &posOld, &move);
+	}
+
+	if (pos.x > 11000.0f)
+	{
+		pos.x = 11000.0f;
+	}
+	else if (pos.x < -11000.0f)
+	{
+		pos.x = -11000.0f;
 	}
 
 	if (CManager::Get()->Get()->GetScene()->GetField() != NULL)
@@ -464,7 +465,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 									CBullet::Create(posGun, moveShot * 30.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_EFFECT);
 
-									CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
+									CSound::PlaySound(CSound::SOUND_LABEL_SE_THUNDER);
 								}
 							}
 						}
@@ -497,7 +498,7 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 		}
 	}
 
-	if (input->GetTrigger(DIK_RSHIFT) == true || inputMouse->GetTrigger(1) == true)
+	if (input->GetTrigger(DIK_RSHIFT) == true || input->GetTrigger(DIK_LSHIFT) == true || inputMouse->GetTrigger(1) == true)
 	{
 		move->x = 0.0f;
 		move->y = 0.0f;
@@ -522,11 +523,62 @@ void CPlayer::Control(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot, D
 
 		if (move->x == 0.0f && move->y == 0.0f)
 		{
-			move->x = -20.0f;
-			move->y = -20.0f;
+			float length = -1.0f;
+			int nWave, nNum;
+
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
+			{
+				for (int nCntWave = 0; nCntWave < MAX_ENEMY_WAVE; nCntWave++)
+				{
+					if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
+					{
+						for (int nCntNum = 0; nCntNum < MAX_ENEMY_SPAWN; nCntNum++)
+						{
+							CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
+
+							if (pEnemy != NULL)
+							{
+								if (pEnemy->GetLockon() == NULL)
+								{
+									if (length == -1.0f)
+									{
+										length = D3DXVec3Length(&(*pos - pEnemy->GetPos()));
+										nNum = nCntNum;
+										nWave = nCntWave;
+									}
+									else
+									{
+										if (D3DXVec3Length(&(*pos - pEnemy->GetPos())) < length)
+										{
+											length = D3DXVec3Length(&(*pos - pEnemy->GetPos()));
+											nNum = nCntNum;
+											nWave = nCntWave;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (length != -1.0f)
+			{
+				CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nWave)->GetEnemy(nNum);
+				*move = (pEnemy->GetPos() - *pos);
+				D3DXVec3Normalize(move, move);
+				*move *= 20.0f;
+			}
+			else
+			{
+				move->x = -sinf(m_rotDest.z);
+				move->y = -cosf(m_rotDest.z);
+			}
 		}
 
 		m_state = STATE_KICK;
+
+		CSound::PlaySound(CSound::SOUND_LABEL_SE_DASH);
 	}
 
 	if (input->GetTrigger(DIK_SPACE) == true && m_bAir == false)
@@ -623,7 +675,7 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 
 									CBullet::Create(posGun, moveShot * 30.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f), nCntWave, nCntNum, 16.0f, 16.0f, 200, CBullet::TYPE_EFFECT);
 
-									CSound::PlaySound(CSound::SOUND_LABEL_SE_SHOT000);
+									CSound::PlaySound(CSound::SOUND_LABEL_SE_THUNDER);
 								}
 							}
 						}
@@ -661,12 +713,72 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 		move->x = 0.0f;
 		move->y = 0.0f;
 
-		move->x = 20.0f * sinf(D3DX_PI + RotStick);
-		move->y = 20.0f * cosf(D3DX_PI + RotStick);
+		if (lengthStick > 10.0f)
+		{
+			move->x = 20.0f * sinf(D3DX_PI + RotStick);
+			move->y = 20.0f * cosf(D3DX_PI + RotStick);
+		}
+
+		if (move->x == 0.0f && move->y == 0.0f)
+		{
+			float length = -1.0f;
+			int nWave, nNum;
+
+			if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
+			{
+				for (int nCntWave = 0; nCntWave < MAX_ENEMY_WAVE; nCntWave++)
+				{
+					if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
+					{
+						for (int nCntNum = 0; nCntNum < MAX_ENEMY_SPAWN; nCntNum++)
+						{
+							CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
+
+							if (pEnemy != NULL)
+							{
+								if (pEnemy->GetLockon() == NULL)
+								{
+									if (length == -1.0f)
+									{
+										length = D3DXVec3Length(&(*pos - pEnemy->GetPos()));
+										nNum = nCntNum;
+										nWave = nCntWave;
+									}
+									else
+									{
+										if (D3DXVec3Length(&(*pos - pEnemy->GetPos())) < length)
+										{
+											length = D3DXVec3Length(&(*pos - pEnemy->GetPos()));
+											nNum = nCntNum;
+											nWave = nCntWave;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (length != -1.0f)
+			{
+				CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nWave)->GetEnemy(nNum);
+				*move = (pEnemy->GetPos() - *pos);
+				D3DXVec3Normalize(move, move);
+				*move *= 20.0f;
+			}
+			else
+			{
+				move->x = -sinf(m_rotDest.z) * 20.0f;
+				move->y = -cosf(m_rotDest.z) * 20.0f;
+			}
+		}
 
 		m_nEnergy--;
 
 		m_state = STATE_KICK;
+
+		CSound::PlaySound(CSound::SOUND_LABEL_SE_DASH);
 	}
 
 	if (input->GetButtonTrigger(2) == true && m_bAir == false)
@@ -765,35 +877,60 @@ void CPlayer::SetRot(D3DXVECTOR3 *rot)
 //=====================================
 bool CPlayer::Collision(D3DXVECTOR3 *pos,D3DXVECTOR3 *posOld, D3DXVECTOR3 *move)
 {
-	if (CManager::Get()->Get()->GetScene()->GetEnemyManager() != NULL)
+	for (int nCntPri = 0; nCntPri < ALL_PRIORITY; nCntPri++)
 	{
-		for (int nCntWave = 0; nCntWave < MAX_ENEMY_WAVE; nCntWave++)
+		if (nCntPri != 4)
 		{
-			if (CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave) != NULL)
-			{
-				for (int nCntNum = 0; nCntNum < MAX_ENEMY_SPAWN; nCntNum++)
-				{
-					CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nCntWave)->GetEnemy(nCntNum);
+			CObject *pObj;
 
-					if (pEnemy != NULL)
+			pObj = GetObjectTop(nCntPri);
+
+			while (pObj != NULL)
+			{
+				CObject *pObjNext = pObj->GetObjectNext();
+
+				CObject::TYPE type;
+
+				//種類取得
+				type = pObj->GetType();
+
+				if (D3DXVec3Length(&(*pos - pObj->GetPos())) < 200.0f)
+				{
+					if (type == TYPE_BLOCK)
 					{
-						if (pEnemy->GetCollider()->CollisionSquareTrigger(*pos) == true)
+						if (pObj->GetCollider() != NULL)
+						{
+							if (pObj->GetCollider()->CollisionSquare(pos, *posOld, move) == true)
+							{
+								if (pObj->GetPos().y + pObj->GetHeight() <= pos->y && pObj->GetRot().z == 0.0f)
+								{
+									move->y = 0.0f;
+									*pos += *move;
+									m_bAir = false;
+								}
+							}
+						}
+					}
+
+					if (type == TYPE_ENEMY)
+					{
+						if (pObj->GetCollider()->CollisionSquareTrigger(*pos) == true)
 						{
 							if (m_state == STATE_KICK)
 							{
-								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
+								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 5, 3, 10, 15, 32.0f, 32.0f);
 
 								pos->z = 0.0f;
 								move->z = 0.0f;
 
 								*pos += *move;
 
-								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
+								CSound::PlaySound(CSound::SOUND_LABEL_SE_HIT);
 
 								m_nEnergy = 10;
 								m_pMotion->ResetFrame();
 
-								pEnemy->SetLockon();
+								pObj->SetLockon();
 							}
 							else
 							{
@@ -808,53 +945,18 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos,D3DXVECTOR3 *posOld, D3DXVECTOR3 *move)
 								move->z = 0.0f;
 
 								*pos += *move;
-								
+
+								CManager::Get()->GetScene()->GetScore()->AddScore(-200);
+
 								m_state = STATE_DAMAGE;
 								CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);
 							}
-
-							return true;
 						}
 					}
 				}
+
+				pObj = pObjNext;
 			}
-		}
-	}
-
-	for (int nCntPri = 0; nCntPri < ALL_PRIORITY; nCntPri++)
-	{
-		CObject *pObj;
-
-		pObj = GetObjectTop(nCntPri);
-
-		while (pObj != NULL)
-		{
-			CObject *pObjNext = pObj->GetObjectNext();
-
-			CObject::TYPE type;
-
-			//種類取得
-			type = pObj->GetType();
-
-			if (type == TYPE_NONE)
-			{
-				if (pObj->GetCollider() != NULL)
-				{
-					if (pObj->GetCollider()->CollisionSquare(pos, *posOld, move) == true)
-					{
-						if (pObj->GetPos().y + pObj->GetHeight() <= pos->y && pObj->GetRot().z == 0.0f)
-						{
-							move->y = 0.0f;
-							*pos += *move;
-							m_bAir = false;
-						}
-
-						//return true;
-					}
-				}
-			}
-
-			pObj = pObjNext;
 		}
 	}
 

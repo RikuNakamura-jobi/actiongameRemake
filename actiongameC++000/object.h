@@ -66,6 +66,7 @@ public:				//外部からアクセス可能
 	virtual float GetHeight(void) { return 0.0f; }
 	virtual void Damage(int damage) { return; }
 	virtual int GetLife(void) { return 0; }
+	virtual void SetLockon(void) { return; }
 
 	int GetID(void) { return m_nID; }
 	void SetID(int nID) { m_nID = nID; }

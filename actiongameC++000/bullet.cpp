@@ -465,7 +465,8 @@ bool CBullet::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move
 
 							if (pEnemy->GetLife() <= 0)
 							{
-								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
+								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 10, 5, 15, 15, 32.0f, 32.0f);
+								CManager::Get()->GetScene()->GetScore()->AddScore(500);
 
 								pEnemy->Uninit();
 
@@ -485,43 +486,47 @@ bool CBullet::Collision(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *move
 	{
 		for (int nCntPri = 0; nCntPri < ALL_PRIORITY; nCntPri++)
 		{
-			CObject *pObj;
-
-			pObj = GetObjectTop(nCntPri);
-
-			while (pObj != NULL)
+			if (nCntPri != 4)
 			{
-				CObject *pObjNext = pObj->GetObjectNext();
+				CObject *pObj;
 
-				CObject::TYPE type;
+				pObj = GetObjectTop(nCntPri);
 
-				//Ží—ÞŽæ“¾
-				type = pObj->GetType();
-
-				if (type == TYPE_ENEMY)
+				while (pObj != NULL)
 				{
-					if (pObj->GetCollider()->CollisionSquareTrigger(*pos) == true)
+					CObject *pObjNext = pObj->GetObjectNext();
+
+					CObject::TYPE type;
+
+					//Ží—ÞŽæ“¾
+					type = pObj->GetType();
+
+					if (type == TYPE_ENEMY)
 					{
-						/*CExplosion::Create(*pos, GetRot(), 64.0f, 64.0f);*/
-
-						pObj->Damage(1);
-
-						if (pObj->GetLife() <= 0)
+						if (pObj->GetCollider()->CollisionSquareTrigger(*pos) == true)
 						{
-							CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 50, 5, 30, 15, 32.0f, 32.0f);
+							/*CExplosion::Create(*pos, GetRot(), 64.0f, 64.0f);*/
 
-							pObj->Uninit();
+							pObj->Damage(1);
 
-							CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
+							if (pObj->GetLife() <= 0)
+							{
+								CParticle::Create(*pos, GetRot(), D3DXCOLOR(0.8f, 0.2f, 0.1f, 1.0f), 10, 5, 15, 15, 32.0f, 32.0f);
+								CManager::Get()->GetScene()->GetScore()->AddScore(300);
+
+								pObj->Uninit();
+
+								CSound::PlaySound(CSound::SOUND_LABEL_SE_SCORE);
+							}
+
+							Uninit();
+
+							return true;
 						}
-
-						Uninit();
-
-						return true;
 					}
-				}
 
-				pObj = pObjNext;
+					pObj = pObjNext;
+				}
 			}
 		}
 	}

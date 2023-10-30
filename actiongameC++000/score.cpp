@@ -114,6 +114,11 @@ void CScore::Update(void)
 {
 	m_posOld = m_pos;
 
+	if (m_nScore < 0)
+	{
+		m_nScore = 0;
+	}
+
 	for (int nCnt = 0; nCnt < MAX_PLACE; nCnt++)
 	{
 		if (m_apObject2D[nCnt] != NULL)

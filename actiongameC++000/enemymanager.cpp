@@ -9,6 +9,7 @@
 #include "manager.h"
 #include "object2D.h"
 #include "bg.h"
+#include "sound.h"
 #include "enemy.h"
 
 //É}ÉNÉçíËã`---------------------------
@@ -66,7 +67,6 @@ CEnemyManager *CEnemyManager::Create(void)
 HRESULT CEnemyManager::Init(void)
 {
 	m_apEnemyWave[0] = CEnemySpawn::Create(0, 5);
-	m_apEnemyWave[1] = CEnemySpawn::Create(1, 1);
 
 	for (int nCnt = 0; nCnt < MAX_ENEMY_WAVE; nCnt++)
 	{
@@ -101,7 +101,7 @@ void CEnemyManager::Uninit(void)
 //=====================================
 void CEnemyManager::Update(void)
 {
-	for (int nCnt = 0; nCnt < MAX_ENEMY_WAVE; nCnt++)
+	for (int nCnt = 0; nCnt < 1; nCnt++)
 	{
 		if (m_apEnemyWave[nCnt] != NULL)
 		{
@@ -110,12 +110,6 @@ void CEnemyManager::Update(void)
 				if (nCnt == 0)
 				{
 					m_apEnemyWave[nCnt]->Uninit();
-
-					delete m_apEnemyWave[nCnt];
-					m_apEnemyWave[nCnt] = NULL;
-					//CManager::Get()->GetScene()->SetFinish();
-
-					//m_apEnemyWave[nCnt] = CEnemySpawn::Create(nCnt, 5);
 				}
 				else
 				{
@@ -123,8 +117,6 @@ void CEnemyManager::Update(void)
 
 					delete m_apEnemyWave[nCnt];
 					m_apEnemyWave[nCnt] = NULL;
-
-					CManager::Get()->GetScene()->SetFinish();
 				}
 			}
 		}
@@ -156,6 +148,7 @@ CEnemySpawn::CEnemySpawn(int nPriority = 0)
 	}
 
 	m_nNumEnemy = 0;
+	m_nWave = 0;
 }
 
 CEnemySpawn::~CEnemySpawn()
@@ -180,24 +173,7 @@ CEnemySpawn *CEnemySpawn::Create(int nWave, int nEnemySpaen)
 			return NULL;
 		}
 
-		for (int nCnt = 0; nCnt < nEnemySpaen; nCnt++)
-		{
-			if (pEnemyManager->m_apObject2D[nCnt] == NULL)
-			{
-				if (nWave == 0)
-				{
-					pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(150.0f * nCnt + 4000.0f, 300.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
-					pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
-				}
-				else
-				{
-					pEnemyManager->m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(-2000.0f, 100.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, nWave);
-					pEnemyManager->m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
-				}
-			}
-		}
-
-		pEnemyManager->m_nNumEnemy = nEnemySpaen;
+		//pEnemyManager->m_nNumEnemy = nEnemySpaen;
 	}
 
 	return pEnemyManager;
@@ -224,7 +200,6 @@ HRESULT CEnemySpawn::Init(void)
 //=====================================
 void CEnemySpawn::Uninit(void)
 {
-	
 }
 
 //=====================================
@@ -232,6 +207,151 @@ void CEnemySpawn::Uninit(void)
 //=====================================
 int CEnemySpawn::Update(void)
 {
+	if (CManager::Get()->GetScene()->GetPlayer() != NULL)
+	{
+		if (CManager::Get()->GetScene()->GetPlayer()->GetPos().x <= 6500.0f && m_nWave == 0)
+		{
+			for (int nCntSpawn = 0; nCntSpawn < 1; nCntSpawn++)
+			{
+				for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+				{
+					if (m_apObject2D[nCnt] == NULL)
+					{
+						m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(6000.0f, 30.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0);
+						m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+						m_nNumEnemy++;
+
+						break;
+					}
+				}
+			}
+
+			m_nWave++;
+		}
+
+		if (CManager::Get()->GetScene()->GetPlayer()->GetPos().x <= 5500.0f && m_nWave == 1)
+		{
+			for (int nCntSpawn = 0; nCntSpawn < 1; nCntSpawn++)
+			{
+				for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+				{
+					if (m_apObject2D[nCnt] == NULL)
+					{
+						m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(5000.0f, 200.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0);
+						m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+						m_nNumEnemy++;
+
+						break;
+					}
+				}
+			}
+
+			m_nWave++;
+		}
+
+		if (CManager::Get()->GetScene()->GetPlayer()->GetPos().x <= 4300.0f && m_nWave == 2)
+		{
+			for (int nCntSpawn = 0; nCntSpawn < 5; nCntSpawn++)
+			{
+				for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+				{
+					if (m_apObject2D[nCnt] == NULL)
+					{
+						m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(200.0f * nCntSpawn + 3000.0f, 250.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0);
+						m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+						m_nNumEnemy++;
+
+						break;
+					}
+				}
+			}
+
+			m_nWave++;
+		}
+
+		if (CManager::Get()->GetScene()->GetPlayer()->GetPos().x <= 2400.0f && m_nWave == 3)
+		{
+			for (int nCntSpawn = 0; nCntSpawn < 3; nCntSpawn++)
+			{
+				for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+				{
+					if (m_apObject2D[nCnt] == NULL)
+					{
+						m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(200.0f * nCntSpawn + 1500.0f, 500.0f - (50.0f * nCntSpawn), 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0);
+						m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+						m_nNumEnemy++;
+
+						break;
+					}
+				}
+			}
+
+			for (int nCntSpawn = 0; nCntSpawn < 2; nCntSpawn++)
+			{
+				for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+				{
+					if (m_apObject2D[nCnt] == NULL)
+					{
+						m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(200.0f * nCntSpawn + 1100.0f, 400.0f + (50.0f * nCntSpawn), 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0);
+						m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+						m_nNumEnemy++;
+
+						break;
+					}
+				}
+			}
+
+			m_nWave++;
+		}
+
+		if (CManager::Get()->GetScene()->GetPlayer()->GetPos().x <= 0.0f && m_nWave == 4)
+		{
+			for (int nCntSpawn = 0; nCntSpawn < 10; nCntSpawn++)
+			{
+				for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+				{
+					if (m_apObject2D[nCnt] == NULL)
+					{
+						m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(75.0f * nCntSpawn + (-1000.0f), 300.0f - (25.0f * nCntSpawn), 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0);
+						m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+						m_nNumEnemy++;
+
+						break;
+					}
+				}
+			}
+
+			m_nWave++;
+		}
+
+		if (CManager::Get()->GetScene()->GetPlayer()->GetPos().x <= -2000.0f && m_nWave == 5)
+		{
+			CSound::StopSound();
+			CSound::PlaySound(CSound::SOUND_LABEL_BGM004);
+
+			for (int nCnt = 0; nCnt < MAX_ENEMY_SPAWN; nCnt++)
+			{
+				if (m_apObject2D[nCnt] == NULL)
+				{
+					m_apObject2D[nCnt] = CEnemy::Create(D3DXVECTOR3(-3500.0f, 150.0f, 0.01f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 1);
+					m_apObject2D[nCnt]->SetIdxSpawn(nCnt);
+
+					m_nNumEnemy++;
+
+					break;
+				}
+			}
+
+			m_nWave++;
+		}
+	}
+
 	return m_nNumEnemy;
 }
 

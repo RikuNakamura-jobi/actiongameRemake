@@ -20,6 +20,7 @@
 #include "sky.h"
 #include "block.h"
 #include "baselife.h"
+#include "tutorial.h"
 #include "sound.h"
 #include "enemymanager.h"
 
@@ -300,20 +301,41 @@ CGame::~CGame()
 HRESULT CGame::Init(void)
 {
 	m_pScore = CScore::Create(D3DXVECTOR3(1200.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
-	m_pTime = CTime::Create(D3DXVECTOR3(600.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
+	//m_pTime = CTime::Create(D3DXVECTOR3(600.0f, 100.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
 	m_pField = CField::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(20000.0f, 0.0f, 20000.0f));
 	m_pSky = CSky::Create();
 	m_pPlayer = CPlayer::Create(D3DXVECTOR3(10600.0f, 0.1f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), CPlayer::TYPE_NORMAL);
 	m_pBaselife = CBaselife::Create();
 
-	for (int nCnt = 0; nCnt < 20; nCnt++)
+	for (int nCnt = 0; nCnt < 10; nCnt++)
 	{
-		CBlock::Create(D3DXVECTOR3(10900.0f, 190.0f * nCnt + 90.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
+		CBlock::Create(D3DXVECTOR3(11000.0f, 190.0f * nCnt + 90.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
 	}
+	CTutorialBillboard::Create(D3DXVECTOR3(10600.0f, 125.0f, -100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 0, 320.0f, 180.0f);
 
 	for (int nCnt = 0; nCnt < 3; nCnt++)
 	{
 		CBlock::Create(D3DXVECTOR3(190.0f * nCnt + 9000.0f, -10.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
+	}
+	CTutorialBillboard::Create(D3DXVECTOR3(9600.0f, 200.0f, -100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 1, 320.0f, 180.0f);
+
+	CBlock::Create(D3DXVECTOR3(8500.0f, -30.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.785f), 100.0f, 100.0f);
+
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		CBlock::Create(D3DXVECTOR3(7500.0f, 190.0f * nCnt + 90.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
+	}
+	CTutorialBillboard::Create(D3DXVECTOR3(7900.0f, 125.0f, -100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 2, 320.0f, 180.0f);
+	CTutorialBillboard::Create(D3DXVECTOR3(6300.0f, 125.0f, -100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 3, 320.0f, 180.0f);
+	CTutorialBillboard::Create(D3DXVECTOR3(5300.0f, 125.0f, -100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 4, 320.0f, 180.0f);
+
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		CBlock::Create(D3DXVECTOR3(190.0f * nCnt + 1100.0f, -10.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
+	}
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		CBlock::Create(D3DXVECTOR3(190.0f * nCnt + 1100.0f, 90.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 100.0f, 100.0f);
 	}
 
 	CBg::Create(CBg::TEXTURE_TUTORIAL_GAME);
@@ -349,15 +371,8 @@ HRESULT CGame::Init(void)
 		return E_FAIL;
 	}
 
-	if (rand() % 2 == 0)
-	{
-		CSound::PlaySound(CSound::SOUND_LABEL_BGM003);
-	}
-	else
-	{
-		CSound::PlaySound(CSound::SOUND_LABEL_BGM004);
-	}
-
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM003);
+	
 	return S_OK;
 }
 
@@ -412,27 +427,28 @@ void CGame::Update(void)
 	}
 	else
 	{
-		if (m_pTime->GetTime() == 0)
-		{
-			CBg::Create(CBg::TEXTURE_SUCCESS);
-			CScore::SetScoreResult(m_pScore->GetScore());
-			m_bFinish = true;
-			CObject::ReleaseTYPE(CObject::TYPE_ENEMY);
+		//if (m_pTime->GetTime() == 0)
+		//{
+		//	CBg::Create(CBg::TEXTURE_SUCCESS);
+		//	CScore::SetScoreResult(m_pScore->GetScore());
+		//	m_bFinish = true;
+		//	CObject::ReleaseTYPE(CObject::TYPE_ENEMY);
 
-			if (m_pEnemyManager != NULL)
-			{
-				//終了処理
-				m_pEnemyManager->Uninit();
+		//	if (m_pEnemyManager != NULL)
+		//	{
+		//		//終了処理
+		//		m_pEnemyManager->Uninit();
 
-				delete m_pEnemyManager;
-				m_pEnemyManager = NULL;
+		//		delete m_pEnemyManager;
+		//		m_pEnemyManager = NULL;
 
-			}
-		}
+		//	}
+		//}
 	}
 
 	if (GetCntFade() == 300 && CFade::GetState() == 0)
 	{
+		m_pScore->SetScoreResult(m_pScore->GetScore());
 		CFade::Create(CFade::TYPE_OUT, MODE_RESULT);
 	}
 
@@ -485,9 +501,69 @@ CResult::~CResult()
 HRESULT CResult::Init(void)
 {
 	m_pBg = CBg::Create(CBg::TEXTURE_RESULT);
-	m_pScore = CScore::Create(D3DXVECTOR3(740.0f, 360.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
 
-	m_pScore->AddScore(CScore::GetScoreResult());
+	FILE *pFile;
+
+	//ファイルから問題を読み込み
+	pFile = fopen("data\\RANKING\\ranking.bin", "rb");
+
+	int nScore[6] = {};
+
+	if (pFile != NULL)
+	{//開けた場合
+		fread(&nScore[0], sizeof(int), 6, pFile);
+		fclose(pFile);
+	}
+	else
+	{//開けなかった場合
+
+	 //ランキング初期化
+		for (int nCnt = 0; nCnt < 6; nCnt++)
+		{
+			nScore[nCnt] = 0;
+		}
+	}
+
+	nScore[5] = CScore::GetScoreResult();
+
+	int nMaxNumber, nTemp;
+	//降順挿入ソート
+	for (int nCnt1 = 1; nCnt1 < 6; nCnt1++)
+	{
+		nMaxNumber = nCnt1;
+
+		while (nMaxNumber > 0 && nScore[nMaxNumber - 1] < nScore[nMaxNumber])
+		{
+			nTemp = nScore[nMaxNumber - 1];
+			nScore[nMaxNumber - 1] = nScore[nMaxNumber];
+			nScore[nMaxNumber] = nTemp;
+
+			nMaxNumber--;
+		}
+	}
+
+	//ファイルから問題を読み込み
+	pFile = fopen("data\\RANKING\\ranking.bin", "wb");
+
+	if (pFile != NULL)
+	{//開けた場合
+
+		fwrite(&nScore[0], sizeof(int), 6, pFile);
+		fclose(pFile);
+	}
+	else
+	{//開けなかった場合
+
+	}
+
+	for (int nCnt = 0; nCnt < 5; nCnt++)
+	{
+		m_pScore[nCnt] = CScore::Create(D3DXVECTOR3(717.0f, 101.0f * nCnt + 235.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
+		m_pScore[nCnt]->AddScore(nScore[nCnt]);
+	}
+
+	m_pScore[5] = CScore::Create(D3DXVECTOR3(717.0f, 70.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), 26.0f, 64.0f);
+	m_pScore[5]->AddScore(CScore::GetScoreResult());
 
 	CSound::PlaySound(CSound::SOUND_LABEL_BGM005);
 

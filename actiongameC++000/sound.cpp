@@ -10,15 +10,18 @@
 CSound::SOUNDINFO CSound::m_aSoundInfo[SOUND_LABEL_MAX] =
 {
 	{ "data/BGM/BLACK_ESCAPE.wav", -1 },							// BGM0
-	{ "data/BGM/Happy_late_summer.wav", -1 },							// BGM0
+	{ "data/BGM/Introduction.wav", -1 },							// BGM0
 	{ "data/BGM/ŒÎ…‚ğŒ©‚Â‚ß‚Ä.wav", -1 },							// BGM0
-	{ "data/BGM/SUMMER_BREEZE_2.wav", -1 },							// BGM0
-	{ "data/BGM/FESTIVAL.wav", -1 },							// BGM0
-	{ "data/BGM/Highway_Star_2.wav", -1 },							// BGM0
+	{ "data/BGM/Cyber_Attack.wav", -1 },							// BGM0
+	{ "data/BGM/Evil_Dance.wav", -1 },							// BGM0
+	{ "data/BGM/‹âF“ss‚Ì”é–§.wav", -1 },							// BGM0
 	{ "data/SE/Œe‚ğŒ‚‚Â.wav", 0 },							// ’e”­Ë‰¹1
 	{ "data/SE/Œˆ’èƒ{ƒ^ƒ“‚ğ‰Ÿ‚·46.wav", 0 },							// ’e”­Ë‰¹1
 	{ "data/SE/¬Œ÷‰¹.wav", 0 },							// ’e”­Ë‰¹1
 	{ "data/SE/small_explosion1.wav", 0 },							// ’e”­Ë‰¹1
+	{ "data/SE/hit000.wav", 0 },							// ’e”­Ë‰¹1
+	{ "data/SE/ƒpƒ“ƒ`‚Ì‘fU‚è3.wav", 0 },							// ’e”­Ë‰¹1
+	{ "data/SE/Electric_Shock06-1.wav", 0 },							// ’e”­Ë‰¹1
 };
 IXAudio2SourceVoice *CSound::m_apSourceVoice[SOUND_LABEL_MAX] = {};
 BYTE *CSound::m_apDataAudio[SOUND_LABEL_MAX] = {};

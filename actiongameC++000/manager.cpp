@@ -30,6 +30,7 @@
 #include "field.h"
 #include "sky.h"
 #include "block.h"
+#include "tutorial.h"
 #include "baselife.h"
 #include "collision.h"
 
@@ -307,6 +308,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	CPlayer::Load();
 	CBlock::Load();
 	CBaselife::Load();
+	CTutorialBillboard::Load();
 
 	if (m_pScene != NULL)
 	{
@@ -350,6 +352,7 @@ void CManager::Uninit(void)
 	CPlayer::Unload();
 	CBlock::Unload();
 	CBaselife::Unload();
+	CTutorialBillboard::Unload();
 
 	CObject::ReleaseAll();
 

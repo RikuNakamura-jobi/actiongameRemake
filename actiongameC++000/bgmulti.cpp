@@ -24,7 +24,7 @@
 LPDIRECT3DTEXTURE9 CBgMulti::m_pTexture[MAX_BGMULTI] = {};
 const char *CBgMulti::m_apFilename[MAX_BGMULTI] = 
 {
-	"data\\TEXTURE\\title000.png",
+	"data\\TEXTURE\\sky003.png",
 	"data\\TEXTURE\\title001.png",
 	"data\\TEXTURE\\title002.png"
 };

@@ -23,12 +23,12 @@ LPDIRECT3DTEXTURE9 CBg::m_pTexture[TEXTURE_MAX] = {};
 const char *CBg::m_apFilename[TEXTURE_MAX] =
 {
 	"data\\TEXTURE\\result001.png",
-	"data\\TEXTURE\\tutorialKey000.png",
-	"data\\TEXTURE\\tutorialKey001.png",
-	"data\\TEXTURE\\tutorialKey002.png",
-	"data\\TEXTURE\\tutorialPad000.png",
-	"data\\TEXTURE\\tutorialPad001.png",
-	"data\\TEXTURE\\tutorialPad002.png",
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\effect000.jpg",
+	"data\\TEXTURE\\effect000.jpg",
 	"data\\TEXTURE\\game000.png",
 	"data\\TEXTURE\\success000.png",
 	"data\\TEXTURE\\Failed.png",

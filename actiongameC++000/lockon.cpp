@@ -27,7 +27,7 @@ LPDIRECT3DTEXTURE9 CLockon::m_pTexture = NULL;
 //=====================================
 // コンストラクタ・デストラクタ
 //=====================================
-CLockon::CLockon(int nPriority = 4) : CObjectBillboard(nPriority)
+CLockon::CLockon(int nPriority = 5) : CObjectBillboard(nPriority)
 {
 	m_bLock = false;
 }
