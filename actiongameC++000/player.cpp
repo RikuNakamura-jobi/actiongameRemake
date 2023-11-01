@@ -760,7 +760,7 @@ void CPlayer::ControlPad(D3DXVECTOR3 *pos, D3DXVECTOR3 *posOld, D3DXVECTOR3 *rot
 				}
 			}
 
-			if (length != -1.0f)
+			if (length != -1.0f && length <= 500.0f)
 			{
 				CEnemy *pEnemy = CManager::Get()->Get()->GetScene()->GetEnemyManager()->GetEnemyWave(nWave)->GetEnemy(nNum);
 				*move = (pEnemy->GetPos() - *pos);
