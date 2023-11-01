@@ -227,7 +227,7 @@ HRESULT CBullet::Init(void)
 	{
 		if (m_type == TYPE_EFFECT)
 		{
-			m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 6.0f, 0.0f), D3DXVECTOR3(0.0f, -6.0f, 0.0f), m_colorOrbit, 15);
+			m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 8.0f, 0.0f), D3DXVECTOR3(0.0f, -8.0f, 0.0f), m_colorOrbit, 15);
 		}
 		else
 		{
@@ -236,7 +236,7 @@ HRESULT CBullet::Init(void)
 	}
 	else
 	{
-		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXVECTOR3(0.0f, -1.0f, 0.0f), m_colorOrbit, 15);
+		m_orbit = COrbit::Create(mtxTemp, D3DXVECTOR3(0.0f, 2.0f, 0.0f), D3DXVECTOR3(0.0f, -2.0f, 0.0f), m_colorOrbit, 15);
 	}
 
 	SetType(TYPE_BULLET);
