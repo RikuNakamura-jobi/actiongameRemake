@@ -260,7 +260,7 @@ bool CCollider::CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld
 			D3DXPlaneFromPointNormal(&plane, &posPlaneCenter[nCnt], &vecNorPlaneCenter);
 
 			//•½–Ê‚ÌŽ®‚Æ“_‚©‚ç
-			if (D3DXPlaneDotCoord(&plane, posTarget) > 0.0f && D3DXPlaneDotCoord(&plane, &posTargetOld) <= 0.0f)
+			if (D3DXPlaneDotCoord(&plane, posTarget) >= 0.0f && D3DXPlaneDotCoord(&plane, &posTargetOld) <= 0.0f)
 			{
 				D3DXPlaneIntersectLine(&vecIntersect, &plane, posTarget, &posTargetOld);
 
@@ -300,7 +300,7 @@ bool CCollider::CollisionSquare(D3DXVECTOR3 *posTarget, D3DXVECTOR3 posTargetOld
 					vecMoveRef *= D3DXVec3Length(&vecMove);
 				}
 
-				*posTarget = vecIntersect + vecMoveRef;
+				*posTarget = vecIntersect - (vecNorPlaneCenter * 1.0f);
 
 				return true;
 			}
@@ -342,7 +342,7 @@ bool CCollider::CollisionSquareTrigger(D3DXVECTOR3 posTarget)
 		D3DXPlaneFromPointNormal(&plane[nCnt], &posPlaneCenter[nCnt], &vecNorPlaneCenter[nCnt]);
 
 		//•½–Ê‚ÌŽ®‚Æ“_‚©‚ç
-		if (D3DXPlaneDotCoord(&plane[nCnt], &posTarget) > 0.0f)
+		if (D3DXPlaneDotCoord(&plane[nCnt], &posTarget) >= 0.0f)
 		{
 			nCheckCollision++;
 		}

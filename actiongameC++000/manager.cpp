@@ -462,13 +462,14 @@ void CManager::Update(void)
 	m_pRenderer->Update();
 	m_pLight->Update();
 	m_pDebugProc->Update();
-	m_pCollision->Update();
 
 	if (m_pScene != NULL)
 	{
 		//XVˆ—
 		m_pScene->Update();
 	}
+
+	m_pCollision->Update();
 }
 
 //=====================================

@@ -321,6 +321,7 @@ void CPlayer::Update(void)
 	}
 
 	CManager::Get()->Get()->GetDebugProc()->Print("プレイヤーのpos: %f, %f, %f\n", pos.x, pos.y, pos.z);
+	CManager::Get()->Get()->GetDebugProc()->Print("プレイヤーのmove: %f, %f, %f\n", move.x, move.y, move.z);
 
 	SetRot(&rot);
 	SetPos(pos);
@@ -905,7 +906,6 @@ bool CPlayer::Collision(D3DXVECTOR3 *pos,D3DXVECTOR3 *posOld, D3DXVECTOR3 *move)
 								if (pObj->GetPos().y + pObj->GetHeight() <= pos->y && pObj->GetRot().z == 0.0f)
 								{
 									move->y = 0.0f;
-									*pos += *move;
 									m_bAir = false;
 								}
 							}
